@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         data.forEach(item => {
           const div = document.createElement("div");
-          div.className = "pesan";
+          div.className = "pesan animate-pop";
           div.innerHTML = `
             <div class="nama">${item.nama}</div>
             <div class="isi">${item.pesan}</div>
