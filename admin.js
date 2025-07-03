@@ -1,40 +1,27 @@
-const tableBody = document.getElementById("pesan-body");
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("pesan-container");
 
-// log di layar HP
-const logBox = document.createElement("div");
-logBox.className = "log-box";
-document.body.appendChild(logBox);
-function log(text) {
-  logBox.innerText += "\n" + text;
-}
+  fetch("/api/pesan")
+    .then(res => res.json())
+    .then(data => {
+      container.innerHTML = "";
 
-log("📡 Mulai fetch pesan...");
-
-fetch("https://admin-villain.vercel.app/api/pesan")
-  .then(res => {
-    log("✅ Response: " + res.status);
-    return res.json();
-  })
-  .then(data => {
-    log("📦 Data: " + JSON.stringify(data));
-
-    if (!Array.isArray(data) || data.length === 0) {
-      tableBody.innerHTML = '<tr><td colspan="3">Belum ada pesan masuk.</td></tr>';
-      return;
-    }
-
-    tableBody.innerHTML = "";
-    data.forEach((item, index) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${item.nama || '-'}</td>
-        <td>${item.pesan || '-'}</td>
-      `;
-      tableBody.appendChild(tr);
+      if (data.length === 0) {
+        container.innerHTML = '<p class="empty">Belum ada pesan yang masuk.</p>';
+      } else {
+        data.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "pesan";
+          div.innerHTML = `
+            <div class="nama">${item.nama}</div>
+            <div class="isi">${item.pesan}</div>
+          `;
+          container.appendChild(div);
+        });
+      }
+    })
+    .catch(error => {
+      container.innerHTML = '<p class="empty">Gagal memuat pesan.</p>';
+      console.error("Fetch error:", error);
     });
-  })
-  .catch(err => {
-    log("❌ Error: " + err.message);
-    tableBody.innerHTML = '<tr><td colspan="3">❌ Gagal memuat data</td></tr>';
-  });
+});
