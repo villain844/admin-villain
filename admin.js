@@ -11,10 +11,16 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         data.forEach(item => {
           const div = document.createElement("div");
-          div.className = "pesan animate-pop";
+          div.className = "pesan-card";
           div.innerHTML = `
-            <div class="nama">${item.nama}</div>
-            <div class="isi">${item.pesan}</div>
+            <div class="pesan-header">
+              <i class="fas fa-user-circle"></i>
+              <span class="pesan-nama">${item.nama}</span>
+            </div>
+            <div class="pesan-body">
+              <i class="fas fa-comment-dots"></i>
+              <p class="pesan-teks">${item.pesan}</p>
+            </div>
           `;
           container.appendChild(div);
         });
