@@ -16,16 +16,24 @@
     }
   </script>
 
-  <h2 class="animate-pop">📩 Pesan Masuk dari Pengunjung</h2>
+  <h2>📩 Pesan Masuk dari Pengunjung</h2>
+<p class="subtitle">TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN</p>
 
-  <p class="pembuka">
-    TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN
-  </p>
-
-  <div class="pesan-container" id="pesan-container">
-    <p class="empty">Memuat pesan...</p>
-  </div>
-
+<div class="pesan-container">
+  <table class="pesan-table">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Pesan</th>
+      </tr>
+    </thead>
+    <tbody id="pesanList">
+      <!-- Diisi via JS -->
+    </tbody>
+  </table>
+</div>
+  
   <script src="admin.js"></script>
 </body>
 </html>
