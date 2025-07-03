@@ -1,6 +1,6 @@
 const tableBody = document.getElementById("pesan-body");
 
-fetch("/api/pesan")
+fetch("https://admin-villain.vercel.app/api/pesan")
   .then(response => response.ok ? response.json() : Promise.reject("Gagal"))
   .then(data => {
     if (!Array.isArray(data) || data.length === 0) {
