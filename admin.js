@@ -1,25 +1,25 @@
 const tableBody = document.getElementById("pesan-body");
 
-// Ambil data dari SheetDB API
-fetch("https://sheetdb.io/api/v1/5ni7a9sbf13p3")
-  .then(response => response.json())
+fetch("/api/pesan")
+  .then(response => response.ok ? response.json() : Promise.reject("Gagal"))
   .then(data => {
     if (!Array.isArray(data) || data.length === 0) {
       tableBody.innerHTML = '<tr><td colspan="3">Belum ada pesan masuk.</td></tr>';
       return;
     }
 
+    tableBody.innerHTML = "";
     data.forEach((item, index) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
         <td>${index + 1}</td>
         <td>${item.nama || '-'}</td>
         <td>${item.pesan || '-'}</td>
       `;
-      tableBody.appendChild(row);
+      tableBody.appendChild(tr);
     });
   })
   .catch(error => {
-    console.error("Gagal memuat data:", error);
-    tableBody.innerHTML = '<tr><td colspan="3">Gagal memuat data.</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="3">❌ Gagal memuat data</td></tr>';
+    console.error(error);
   });
