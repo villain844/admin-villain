@@ -1,72 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@500&display=swap');
-
 body {
   margin: 0;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Poppins', sans-serif;
   background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
   background-size: cover;
-  color: #ffffff;
-}
-
-/* Login */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.login-box {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 0 15px #00ffff;
-  width: 90%;
-  max-width: 350px;
+  color: #fff;
   text-align: center;
-}
-.login-box input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 8px;
-  border: none;
-  background: rgba(255,255,255,0.1);
-  color: white;
-}
-.login-box button {
-  background: linear-gradient(to right, #00c6ff, #0072ff);
-  color: white;
-  border: none;
-  padding: 10px;
-  margin-top: 16px;
-  width: 100%;
-  border-radius: 10px;
-  font-weight: bold;
-  box-shadow: 0 4px 0 #0056b3;
-}
-
-/* Pesan Card */
-.pesan-container {
-  max-width: 700px;
-  margin: auto;
   padding: 20px;
 }
-.pesan-card {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  padding: 16px 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 10px #00ffff44;
+
+h2 {
+  color: #ffffff;
+  text-shadow: 1px 1px 5px #000;
+  font-size: 24px;
 }
-.pesan-header {
+
+.subtitle {
+  margin-top: 5px;
   font-weight: bold;
-  font-size: 16px;
-  color: #00e6ff;
-  margin-bottom: 8px;
+  color: #d0d0ff;
 }
-.pesan-teks {
-  color: #e0e0e0;
-  line-height: 1.4;
+
+.pesan-container {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px cyan;
+  overflow-x: auto;
+}
+
+.pesan-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+}
+
+.pesan-table th,
+.pesan-table td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: left;
+}
+
+.pesan-table th {
+  background-color: rgba(0, 0, 50, 0.6);
+}
+
+.pesan-table td {
+  background-color: rgba(255, 255, 255, 0.05);
 }
