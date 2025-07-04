@@ -1,98 +1,39 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .login-container {
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 20px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: 0 0 20px cyan;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .logo {
-      color: #00f7ff;
-      font-size: 2em;
-      margin-bottom: 25px;
-      text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 30px;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      font-size: 16px;
-      outline: none;
-      box-shadow: inset 0 0 5px cyan;
-    }
-
-    input::placeholder {
-      color: #ccc;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 30px;
-      background: #00f7ff;
-      color: #000;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 0 15px #00f7ff, 0 0 25px #00f7ff inset;
-    }
-
-    button:hover {
-      background: #00d6e6;
-      box-shadow: 0 0 20px #00d6e6, 0 0 35px #00d6e6 inset;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="login-container">
-    <h1 class="logo">VILLAIN ADMIN</h1>
-    <form action="index.html" onsubmit="return validateLogin()">
+
+  <div class="login-box">
+    <h2>Login Admin</h2>
+    <form id="loginForm">
       <input type="text" id="username" placeholder="Username" required />
       <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login</button>
+      <button type="submit">Masuk</button>
     </form>
+    <p id="error" style="color:red;"></p>
   </div>
 
   <script>
-    function validateLogin() {
-      const u = document.getElementById('username').value;
-      const p = document.getElementById('password').value;
-      if (u === 'villain' && p === '123321') {
-        return true;
+    const form = document.getElementById("loginForm");
+    const error = document.getElementById("error");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault(); // mencegah reload
+
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      if (user === "admin" && pass === "12345") {
+        window.location.href = "index.html"; // arahkan ke halaman utama
       } else {
-        alert('Login gagal. Username atau password salah!');
-        return false;
+        error.textContent = "Username atau password salah!";
       }
-    }
+    });
   </script>
 </body>
 </html>
