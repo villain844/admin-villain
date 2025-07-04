@@ -4,8 +4,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Admin</title>
-  <link rel="stylesheet" href="login.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px cyan;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .logo {
+      color: #00f7ff;
+      font-size: 2em;
+      margin-bottom: 25px;
+      text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 0 5px cyan;
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 30px;
+      background: #00f7ff;
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 15px #00f7ff, 0 0 25px #00f7ff inset;
+    }
+
+    button:hover {
+      background: #00d6e6;
+      box-shadow: 0 0 20px #00d6e6, 0 0 35px #00d6e6 inset;
+    }
+  </style>
 </head>
 <body>
   <div class="login-container">
@@ -21,10 +86,10 @@
     function validateLogin() {
       const u = document.getElementById('username').value;
       const p = document.getElementById('password').value;
-      if (u === 'villain' && p === 'admkn123') {
+      if (u === 'villain' && p === '123') {
         return true;
       } else {
-        alert('Login gagal. Coba lagi!');
+        alert('Login gagal. Username atau password salah!');
         return false;
       }
     }
