@@ -3,42 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pesan Masuk - Admin Villain</title>
+  <title>Admin Produk - Villain Hosting</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
-<body class="admin-body">
+<body>
 
   <script>
-    if (localStorage.getItem("loggedIn") !== "true") {
+    if (localStorage.getItem("isLoggedIn") !== "true") {
       window.location.href = "login.html";
     }
   </script>
 
-  <h2>📩 Pesan Masuk dari Pengunjung</h2>
-<p class="subtitle">TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN</p>
+  <header class="admin-header">
+    <h1>DAFTAR PRODUK SAAT INI</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
 
-<div class="title-container">
-  <h1>📩 Pesan Masuk dari Pengunjung</h1>
-  <div class="subtitle">TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN</div>
-</div>
+  <main class="product-list" id="productList">
+    <p class="loading-msg">Memuat produk...</p>
+  </main>
 
-<div class="message-box">
-  <table>
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Nama</th>
-        <th>Pesan</th>
-      </tr>
-    </thead>
-    <tbody id="pesan-container">
-      <!-- Data pesan akan ditampilkan di sini melalui JS -->
-    </tbody>
-  </table>
-</div>
-  
-  <script src="admin.js"></script>
+  <button class="reset-id-btn" onclick="resetIdProduk()">🔄 Reset ID Produk</button>
+
+  <script src="script.js"></script>
 </body>
 </html>
