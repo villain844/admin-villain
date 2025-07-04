@@ -1,14 +1,20 @@
 fetch("https://sheetdb.io/api/v1/hkydnwssgudey")
-  .then(res => res.json())
+  .then(response => response.json())
   .then(data => {
-    const tbody = document.getElementById("pesanList");
-    data.forEach((item, i) => {
+    const container = document.getElementById("pesan-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    data.forEach((item, index) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${i + 1}</td>
-        <td>${item.nama || '-'}</td>
-        <td>${item.pesan || '-'}</td>
+        <td>${index + 1}</td>
+        <td>${item.nama}</td>
+        <td>${item.pesan}</td>
       `;
-      tbody.appendChild(row);
+      container.appendChild(row);
     });
+  })
+  .catch(error => {
+    console.error("Gagal ambil data:", error);
   });
