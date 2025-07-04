@@ -31,6 +31,40 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Tambah Produk Baru
+document.getElementById("addProductForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  const data = {
+    foto: formData.get("foto"),
+    nama: formData.get("nama"),
+    stok: formData.get("stok"),
+    harga: formData.get("harga"),
+    diskon: formData.get("diskon") || "0",
+    deskripsi: formData.get("deskripsi"),
+    id: Date.now() // ID unik berdasarkan waktu
+  };
+
+  fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data })
+  })
+    .then(res => {
+      if (res.ok) {
+        alert("Produk berhasil ditambahkan!");
+        form.reset();
+        location.reload();
+      } else {
+        alert("Gagal menambahkan produk.");
+      }
+    })
+    .catch(() => alert("Gagal mengirim data."));
+});
+
 // Reset ID
 function resetIdProduk() {
   fetch(API)
@@ -48,6 +82,8 @@ function resetIdProduk() {
       alert("ID produk berhasil direset!");
     });
 }
+
+
 
 // Logout
 function logout() {
