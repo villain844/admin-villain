@@ -85,7 +85,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://sheetdb.io/api/v1/vmf2cfpzd8dpr'; // Ganti jika kamu ubah API SheetDB
+    const API_URL = 'https://sheetdb.io/api/v1/hkydnwssgudey';
 
     fetch(API_URL)
       .then(res => res.json())
@@ -121,7 +121,7 @@
       if (!confirm("Yakin ingin menghapus pesan ini?")) return;
 
       btn.disabled = true;
-      fetch(`https://sheetdb.io/api/v1/vmf2cfpzd8dpr/id/${id}`, {
+      fetch(`https://sheetdb.io/api/v1/hkydnwssgudey/id/${id}`, {
         method: 'DELETE'
       })
       .then(res => {
