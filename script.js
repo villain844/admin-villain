@@ -8,29 +8,41 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
 }
 
 // Tampilkan Produk
-fetch(API)
-  .then(res => res.json())
-  .then(data => {
-    list.innerHTML = "";
-    data.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.innerHTML = `
-        <img src="${item.foto}" />
-        <p><strong>ID:</strong> ${item.id}</p>
-        <p><strong>Nama:</strong> ${item.nama}</p>
-        <p><strong>Stok:</strong> ${item.stok}</p>
-        <p><strong>Harga:</strong> ${item.harga}</p>
-        <p><strong>Diskon:</strong> ${item.diskon}%</p>
-        <p><strong>Deskripsi:</strong> ${item.deskripsi}</p>
-        <div class="actions">
-          <button class="edit-btn" onclick="editProduk('${item.id}')">Edit</button>
-          <button class="delete-btn" onclick="hapusProduk('${item.id}')">Hapus</button>
-        </div>
-      `;
-      list.appendChild(card);
+function loadProducts() {
+  fetch(API)
+    .then(res => res.json())
+    .then(data => {
+      list.innerHTML = "";
+      data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${item.foto}" />
+          <p><strong>ID:</strong> ${item.id}</p>
+          <p><strong>Nama:</strong> ${item.nama}</p>
+          <p><strong>Stok:</strong> ${item.stok}</p>
+          <p><strong>Harga:</strong> ${item.harga}</p>
+          <p><strong>Diskon:</strong> ${item.diskon}%</p>
+          <p><strong>Deskripsi:</strong> ${item.deskripsi}</p>
+          <div class="actions">
+            <button class="edit-btn" data-id="${item.id}">Edit</button>
+            <button class="delete-btn" onclick="hapusProduk('${item.id}')">Hapus</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+
+      // Pasang listener setelah produk dirender
+      document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-id");
+          editProduk(id);
+        });
+      });
     });
-  });
+}
+
+loadProducts();
 
 // Tambah / Edit Produk
 document.getElementById("addProductForm").addEventListener("submit", async function (e) {
@@ -58,7 +70,7 @@ document.getElementById("addProductForm").addEventListener("submit", async funct
       form.reset();
       editingId = null;
       form.querySelector("button").textContent = "Kirim Produk";
-      location.reload();
+      loadProducts();
     });
 
   } else {
@@ -77,17 +89,10 @@ document.getElementById("addProductForm").addEventListener("submit", async funct
     }).then(() => {
       alert("Produk berhasil ditambahkan!");
       form.reset();
-      location.reload();
+      loadProducts();
     });
   }
 });
-
-// Hapus Produk
-function hapusProduk(id) {
-  if (!confirm("Yakin ingin menghapus produk ini?")) return;
-  fetch(`${API}/id/${id}`, { method: "DELETE" })
-    .then(() => location.reload());
-}
 
 // Edit Produk
 function editProduk(id) {
@@ -107,6 +112,13 @@ function editProduk(id) {
     });
 }
 
+// Hapus Produk
+function hapusProduk(id) {
+  if (!confirm("Yakin ingin menghapus produk ini?")) return;
+  fetch(`${API}/id/${id}`, { method: "DELETE" })
+    .then(() => loadProducts());
+}
+
 // Reset ID
 function resetIdProduk() {
   fetch(API)
@@ -122,7 +134,7 @@ function resetIdProduk() {
       });
       Promise.all(updatePromises).then(() => {
         alert("ID berhasil direset!");
-        location.reload();
+        loadProducts();
       });
     });
 }
@@ -131,4 +143,4 @@ function resetIdProduk() {
 function logout() {
   localStorage.removeItem("isLoggedIn");
   window.location.href = "login.html";
-}
+    }
