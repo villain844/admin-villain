@@ -83,6 +83,7 @@ if (produkList) {
       data.forEach(item => {
         const row = document.createElement("tr");
         row.innerHTML = `
+          <td><img src="${item.foto}" alt="${item.nama}" /></td>
           <td>${item.id}</td>
           <td>${item.nama}</td>
           <td>${item.harga}</td>
@@ -93,7 +94,6 @@ if (produkList) {
       });
     });
 }
-
 // List Pesan
 const pesanList = document.getElementById("pesanList");
 if (pesanList) {
