@@ -15,9 +15,9 @@
     }
 
     .table-container {
-      max-width: 900px;
+      max-width: 950px;
       margin: 60px auto;
-      background: rgba(0,0,80,0.5);
+      background: rgba(0, 0, 80, 0.5);
       padding: 20px;
       border-radius: 14px;
       box-shadow: 0 0 20px rgba(0,255,255,0.3);
@@ -39,10 +39,27 @@
       padding: 10px;
       border-bottom: 1px solid rgba(255,255,255,0.2);
       text-align: left;
+      vertical-align: middle;
     }
 
     th {
       color: #00faff;
+      text-align: center;
+    }
+
+    td img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      display: block;
+      margin: auto;
+    }
+
+    @media screen and (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -53,6 +70,7 @@
     <table>
       <thead>
         <tr>
+          <th>Foto</th>
           <th>ID</th>
           <th>Nama</th>
           <th>Harga</th>
