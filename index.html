@@ -3,42 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Produk - Villain Hosting</title>
+  <title>Admin - Villain Hosting</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <script>
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-      window.location.href = "login.html";
-    }
-  </script>
-
+  <!-- Header -->
   <header class="admin-header">
-    <h1>DAFTAR PRODUK SAAT INI</h1>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <h1>Dashboard Admin</h1>
+    <button onclick="logout()">Logout</button>
   </header>
 
-  <main class="product-list" id="productList">
-    <p class="loading-msg">Memuat produk...</p>
-  </main>
-
-  <button class="reset-id-btn" onclick="resetIdProduk()">🔄 Reset ID Produk</button>
-
+  <!-- Form Tambah / Edit -->
   <section class="form-section">
-    <h2>Tambah Produk Baru</h2>
+    <h2>Tambah / Edit Produk</h2>
     <form id="addProductForm">
       <input type="text" name="foto" placeholder="Link Gambar Produk" required />
       <input type="text" name="nama" placeholder="Nama Produk" required />
-      <input type="number" name="stok" placeholder="Stok" required />
-      <input type="number" name="harga" placeholder="Harga" required />
-      <input type="number" name="diskon" placeholder="Diskon (%)" />
+      <input type="number" name="stok" placeholder="Stok Produk" required />
+      <input type="text" name="harga" placeholder="Harga" required />
+      <input type="text" name="diskon" placeholder="Diskon (%)" />
       <textarea name="deskripsi" placeholder="Deskripsi Produk" required></textarea>
-      <button type="submit" class="submit-btn">Kirim Produk</button>
+      <button type="submit">Kirim Produk</button>
     </form>
   </section>
 
+  <!-- Daftar Produk -->
+  <section class="product-section">
+    <h2>List Produk</h2>
+    <div id="productList" class="product-list">
+      <!-- Produk ditampilkan dari script.js -->
+    </div>
+  </section>
+
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
-        </html>
+</html>
