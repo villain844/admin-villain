@@ -1,5 +1,11 @@
 const API = "https://sheetdb.io/api/v1/vmf2cfpzd8dpr";
 const list = document.getElementById("productList");
+let editingId = null;
+
+// Cek login
+if (localStorage.getItem("isLoggedIn") !== "true") {
+  window.location.href = "login.html";
+}
 
 // Tampilkan Produk
 fetch(API)
@@ -26,19 +32,13 @@ fetch(API)
     });
   });
 
-// Tambah Produk (ID berurutan)
+// Tambah / Edit Produk
 document.getElementById("addProductForm").addEventListener("submit", async function (e) {
   e.preventDefault();
   const form = e.target;
   const formData = new FormData(form);
 
-  const res = await fetch(API);
-  const data = await res.json();
-  const lastId = Math.max(0, ...data.map(d => parseInt(d.id) || 0));
-  const newId = (lastId + 1).toString();
-
-  const newData = {
-    id: newId,
+  const data = {
     foto: formData.get("foto"),
     nama: formData.get("nama"),
     stok: formData.get("stok"),
@@ -47,15 +47,39 @@ document.getElementById("addProductForm").addEventListener("submit", async funct
     deskripsi: formData.get("deskripsi")
   };
 
-  await fetch(API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ data: newData })
-  });
+  if (editingId) {
+    // mode EDIT
+    fetch(`${API}/id/${editingId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data })
+    }).then(() => {
+      alert("Produk berhasil diubah!");
+      form.reset();
+      editingId = null;
+      form.querySelector("button").textContent = "Kirim Produk";
+      location.reload();
+    });
 
-  alert("Produk berhasil ditambahkan!");
-  form.reset();
-  location.reload();
+  } else {
+    // mode TAMBAH
+    const res = await fetch(API);
+    const list = await res.json();
+    const lastId = Math.max(0, ...list.map(d => parseInt(d.id) || 0));
+    const newId = (lastId + 1).toString();
+
+    const newData = { id: newId, ...data };
+
+    fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: newData })
+    }).then(() => {
+      alert("Produk berhasil ditambahkan!");
+      form.reset();
+      location.reload();
+    });
+  }
 });
 
 // Hapus Produk
@@ -65,22 +89,41 @@ function hapusProduk(id) {
     .then(() => location.reload());
 }
 
+// Edit Produk
+function editProduk(id) {
+  fetch(`${API}/id/${id}`)
+    .then(res => res.json())
+    .then(([item]) => {
+      const form = document.getElementById("addProductForm");
+      form.foto.value = item.foto;
+      form.nama.value = item.nama;
+      form.stok.value = item.stok;
+      form.harga.value = item.harga;
+      form.diskon.value = item.diskon;
+      form.deskripsi.value = item.deskripsi;
+      editingId = item.id;
+      form.querySelector("button").textContent = "Update Produk";
+      window.scrollTo({ top: form.offsetTop, behavior: "smooth" });
+    });
+}
+
 // Reset ID
 function resetIdProduk() {
   fetch(API)
     .then(res => res.json())
     .then(data => {
       let i = 1;
-      data.forEach(item => {
-        fetch(`${API}/id/${item.id}`, {
+      const updatePromises = data.map(item => {
+        return fetch(`${API}/id/${item.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: { id: i } })
+          body: JSON.stringify({ data: { id: i++ } })
         });
-        i++;
       });
-      alert("ID berhasil direset!");
-      setTimeout(() => location.reload(), 1000);
+      Promise.all(updatePromises).then(() => {
+        alert("ID berhasil direset!");
+        location.reload();
+      });
     });
 }
 
