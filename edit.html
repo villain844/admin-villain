@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Produk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 60px auto;
+      background: rgba(0, 0, 80, 0.6);
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00faff;
+    }
+
+    select, input, textarea, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 14px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    button {
+      background: linear-gradient(145deg, #00faff, #00a1d6);
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 4px 0 #008fa3;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    button:active {
+      transform: scale(0.96);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Edit Produk</h2>
+    <form id="editProductForm">
+      <select name="id" required>
+        <option value="">Pilih ID Produk</option>
+      </select>
+      <input type="text" name="nama" placeholder="Nama Baru" />
+      <input type="text" name="harga" placeholder="Harga Baru" />
+      <input type="text" name="stok" placeholder="Stok Baru" />
+      <textarea name="deskripsi" placeholder="Deskripsi Baru"></textarea>
+      <button type="submit">Update Produk</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
