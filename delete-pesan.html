@@ -19,8 +19,8 @@
       max-width: 800px;
       margin: 40px auto;
       padding: 20px;
-      background-color: rgba(0,0,0,0.6);
-      border-radius: 18px;
+      background-color: rgba(0,0,0,0.65);
+      border-radius: 20px;
       box-shadow: 0 0 10px cyan;
     }
 
@@ -28,16 +28,16 @@
       text-align: center;
       margin-bottom: 20px;
       color: cyan;
-      text-shadow: 0 0 5px cyan;
+      text-shadow: 0 0 6px cyan;
     }
 
     .pesan-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
       padding: 12px;
+      border-radius: 14px;
       margin-bottom: 10px;
     }
 
@@ -47,8 +47,9 @@
     }
 
     .pesan-info b {
-      display: block;
       color: #00ffff;
+      display: block;
+      margin-bottom: 5px;
     }
 
     .hapus-btn {
@@ -67,29 +68,38 @@
       transform: translateY(2px);
       box-shadow: none;
     }
+
+    .notif {
+      text-align: center;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: lightgreen;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>🗑 Hapus Pesan Pelanggan</h2>
-    <div id="list-pesan"></div>
+    <div id="list-pesan">Memuat pesan...</div>
   </div>
 
   <script>
-    const API_URL = 'https://sheetdb.io/api/v1/vmf2cfpzd8dpr';
+    const API_URL = 'https://sheetdb.io/api/v1/vmf2cfpzd8dpr'; // Ganti jika kamu ubah API SheetDB
 
-    // Ambil semua pesan
     fetch(API_URL)
       .then(res => res.json())
       .then(data => {
         const list = document.getElementById("list-pesan");
+        list.innerHTML = ''; // Bersihkan loading
+
         if (data.length === 0) {
           list.innerHTML = "<p style='text-align:center;color:#ccc'>Belum ada pesan.</p>";
           return;
         }
 
         data.forEach(item => {
-          const idPesan = item.id;
+          if (!item.id) return; // Skip jika tidak ada ID
           const div = document.createElement("div");
           div.className = "pesan-item";
           div.innerHTML = `
@@ -97,28 +107,28 @@
               <b>${item.nama}</b>
               <span>${item.pesan}</span>
             </div>
-            <button class="hapus-btn" onclick="hapusPesan('${idPesan}', this)">Hapus</button>
+            <button class="hapus-btn" onclick="hapusPesan('${item.id}', this)">Hapus</button>
           `;
           list.appendChild(div);
         });
       })
       .catch(() => {
-        document.getElementById("list-pesan").innerHTML = "<p style='text-align:center;color:red'>Gagal memuat data.</p>";
+        document.getElementById("list-pesan").innerHTML =
+          "<p style='text-align:center;color:red'>Gagal memuat data.</p>";
       });
 
-    // Fungsi hapus
     function hapusPesan(id, btn) {
       if (!confirm("Yakin ingin menghapus pesan ini?")) return;
 
       btn.disabled = true;
       fetch(`https://sheetdb.io/api/v1/vmf2cfpzd8dpr/id/${id}`, {
-        method: "DELETE"
+        method: 'DELETE'
       })
       .then(res => {
         if (res.ok) {
           btn.parentElement.remove();
         } else {
-          throw new Error("Gagal menghapus");
+          throw new Error('Gagal menghapus');
         }
       })
       .catch(() => {
