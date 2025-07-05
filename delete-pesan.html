@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hapus Pesan Pelanggan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -43,6 +43,7 @@
 
     .pesan-info {
       flex: 1;
+      padding-right: 10px;
     }
 
     .pesan-info b {
@@ -75,14 +76,20 @@
   </div>
 
   <script>
-    const API_URL = 'https://sheetdb.io/api/v1/vmf2cfpzd8dpr'; // ganti dengan API pesanmu jika beda
+    const API_URL = 'https://sheetdb.io/api/v1/vmf2cfpzd8dpr';
 
     // Ambil semua pesan
     fetch(API_URL)
       .then(res => res.json())
       .then(data => {
         const list = document.getElementById("list-pesan");
+        if (data.length === 0) {
+          list.innerHTML = "<p style='text-align:center;color:#ccc'>Belum ada pesan.</p>";
+          return;
+        }
+
         data.forEach(item => {
+          const idPesan = item.id;
           const div = document.createElement("div");
           div.className = "pesan-item";
           div.innerHTML = `
@@ -90,25 +97,33 @@
               <b>${item.nama}</b>
               <span>${item.pesan}</span>
             </div>
-            <button class="hapus-btn" onclick="hapusPesan('${item.id}', this)">Hapus</button>
+            <button class="hapus-btn" onclick="hapusPesan('${idPesan}', this)">Hapus</button>
           `;
           list.appendChild(div);
         });
-      });
-
-    // Fungsi hapus pesan
-    function hapusPesan(id, button) {
-      if (!confirm("Yakin ingin menghapus pesan ini?")) return;
-      button.disabled = true;
-      fetch(`${API_URL}/id/${id}`, {
-        method: "DELETE"
-      })
-      .then(() => {
-        button.parentElement.remove();
       })
       .catch(() => {
-        alert("Gagal menghapus pesan");
-        button.disabled = false;
+        document.getElementById("list-pesan").innerHTML = "<p style='text-align:center;color:red'>Gagal memuat data.</p>";
+      });
+
+    // Fungsi hapus
+    function hapusPesan(id, btn) {
+      if (!confirm("Yakin ingin menghapus pesan ini?")) return;
+
+      btn.disabled = true;
+      fetch(`https://sheetdb.io/api/v1/vmf2cfpzd8dpr/id/${id}`, {
+        method: "DELETE"
+      })
+      .then(res => {
+        if (res.ok) {
+          btn.parentElement.remove();
+        } else {
+          throw new Error("Gagal menghapus");
+        }
+      })
+      .catch(() => {
+        alert("Gagal menghapus pesan.");
+        btn.disabled = false;
       });
     }
   </script>
