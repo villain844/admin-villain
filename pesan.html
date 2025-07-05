@@ -10,38 +10,37 @@
       font-family: 'Poppins', sans-serif;
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
-      color: white;
       margin: 0;
       padding: 0;
+      color: white;
     }
 
     .container {
       max-width: 800px;
       margin: 40px auto;
       padding: 20px;
-      background-color: rgba(0, 0, 0, 0.65);
-      border-radius: 20px;
-      box-shadow: 0 0 10px cyan;
+      background: rgba(0,0,0,0.6);
+      border-radius: 18px;
+      box-shadow: 0 0 12px cyan;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 20px;
       color: cyan;
       text-shadow: 0 0 6px cyan;
+      margin-bottom: 20px;
     }
 
     .pesan-item {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
       padding: 14px;
-      border-radius: 14px;
       margin-bottom: 12px;
-      box-shadow: 0 0 6px rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 6px rgba(0,255,255,0.25);
     }
 
     .pesan-item b {
       color: #00ffff;
-      font-size: 15px;
     }
 
     .pesan-item span {
@@ -59,33 +58,31 @@
   </div>
 
   <script>
-    const API_URL = 'https://sheetdb.io/api/v1/vmf2cfpzd8dpr';
+    const API = "https://sheetdb.io/api/v1/hkydnwssgudey";
 
-    fetch(API_URL)
+    fetch(API)
       .then(res => res.json())
       .then(data => {
-        const list = document.getElementById("list-pesan");
-        list.innerHTML = ''; // Bersihkan loading
+        const container = document.getElementById("list-pesan");
+        container.innerHTML = '';
 
         if (data.length === 0) {
-          list.innerHTML = "<p style='text-align:center;color:#ccc'>Belum ada pesan.</p>";
+          container.innerHTML = "<p style='text-align:center;color:#ccc'>Belum ada pesan.</p>";
           return;
         }
 
         data.forEach(item => {
-          if (!item.nama || !item.pesan) return;
           const div = document.createElement("div");
           div.className = "pesan-item";
           div.innerHTML = `
             <b>${item.nama}</b>
             <span>${item.pesan}</span>
           `;
-          list.appendChild(div);
+          container.appendChild(div);
         });
       })
       .catch(() => {
-        document.getElementById("list-pesan").innerHTML =
-          "<p style='text-align:center;color:red'>Gagal memuat data.</p>";
+        document.getElementById("list-pesan").innerHTML = "<p style='color:red;text-align:center;'>Gagal mengambil data.</p>";
       });
   </script>
 </body>
