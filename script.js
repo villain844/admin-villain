@@ -1,107 +1,154 @@
-const API = "https://sheetdb.io/api/v1/vmf2cfpzd8dpr";
-let editingId = null;
+const produkAPI = "https://sheetdb.io/api/v1/vmf2cfpzd8dpr";
+const pesanAPI = "https://sheetdb.io/api/v1/hkydnwssgudey";
 
-function loadProducts() {
-  fetch(API)
-    .then(res => res.json())
-    .then(data => {
-      const list = document.getElementById("productList");
-      list.innerHTML = "";
-
-      data.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "product-card";
-        div.innerHTML = `
-          <img src="${item.foto}" />
-          <p><strong>ID:</strong> ${item.id}</p>
-          <p><strong>Nama:</strong> ${item.nama}</p>
-          <p><strong>Harga:</strong> ${item.harga}</p>
-          <p><strong>Stok:</strong> ${item.stok}</p>
-          <p><strong>Diskon:</strong> ${item.diskon || "0"}%</p>
-          <p><strong>Deskripsi:</strong> ${item.deskripsi}</p>
-          <div class="actions">
-            <button class="edit-btn" data-id="${item.id}">Edit</button>
-            <button class="delete-btn" onclick="hapusProduk('${item.id}')">Hapus</button>
-          </div>
-        `;
-        list.appendChild(div);
-      });
-
-      // ⛓ Tambahkan event listener Edit setelah produk dimuat
-      document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.dataset.id;
-          editProduk(id);
-        });
-      });
-    });
-}
-
-loadProducts();
-
-// Form Submit
-document.getElementById("addProductForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
-  const form = e.target;
-  const data = {
-    foto: form.foto.value,
-    nama: form.nama.value,
-    stok: form.stok.value,
-    harga: form.harga.value,
-    diskon: form.diskon.value,
-    deskripsi: form.deskripsi.value
-  };
-
-  if (editingId) {
-    fetch(`${API}/id/${editingId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data })
-    }).then(() => {
-      alert("Berhasil diubah!");
-      editingId = null;
-      form.reset();
-      form.querySelector("button").textContent = "Kirim Produk";
-      loadProducts();
-    });
-  } else {
-    const res = await fetch(API);
-    const list = await res.json();
-    const lastId = Math.max(0, ...list.map(i => +i.id || 0));
-    const newId = (lastId + 1).toString();
-    fetch(API, {
+// Tambah Produk
+const addForm = document.getElementById("addProductForm");
+if (addForm) {
+  addForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(addForm));
+    const response = await fetch(produkAPI, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: { id: newId, ...data } })
-    }).then(() => {
-      alert("Produk berhasil ditambah!");
-      form.reset();
-      loadProducts();
+      body: JSON.stringify({ data: data }),
     });
-  }
-});
+    alert("Produk berhasil ditambahkan!");
+    addForm.reset();
+  });
+}
 
 // Edit Produk
-function editProduk(id) {
-  fetch(`${API}/id/${id}`)
+const editForm = document.getElementById("editProductForm");
+if (editForm) {
+  const select = editForm.querySelector("select");
+
+  fetch(produkAPI)
     .then(res => res.json())
-    .then(([item]) => {
-      const form = document.getElementById("addProductForm");
-      form.foto.value = item.foto;
-      form.nama.value = item.nama;
-      form.stok.value = item.stok;
-      form.harga.value = item.harga;
-      form.diskon.value = item.diskon;
-      form.deskripsi.value = item.deskripsi;
-      editingId = item.id;
-      form.querySelector("button").textContent = "Update Produk";
-      window.scrollTo({ top: form.offsetTop - 50, behavior: "smooth" });
+    .then(data => {
+      data.forEach(item => {
+        const opt = document.createElement("option");
+        opt.value = item.id;
+        opt.textContent = `${item.id} - ${item.nama}`;
+        select.appendChild(opt);
+      });
+    });
+
+  editForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = select.value;
+    const data = Object.fromEntries(new FormData(editForm));
+    delete data.id;
+
+    const response = await fetch(`${produkAPI}/id/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data }),
+    });
+    alert("Produk berhasil diupdate!");
+    editForm.reset();
+  });
+}
+
+// Delete Produk
+const deleteForm = document.getElementById("deleteProductForm");
+if (deleteForm) {
+  const select = deleteForm.querySelector("select");
+
+  fetch(produkAPI)
+    .then(res => res.json())
+    .then(data => {
+      data.forEach(item => {
+        const opt = document.createElement("option");
+        opt.value = item.id;
+        opt.textContent = `${item.id} - ${item.nama}`;
+        select.appendChild(opt);
+      });
+    });
+
+  deleteForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = select.value;
+    const response = await fetch(`${produkAPI}/id/${id}`, { method: "DELETE" });
+    alert("Produk berhasil dihapus!");
+    deleteForm.reset();
+  });
+}
+
+// List Produk
+const produkList = document.getElementById("produkList");
+if (produkList) {
+  fetch(produkAPI)
+    .then(res => res.json())
+    .then(data => {
+      data.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.nama}</td>
+          <td>${item.harga}</td>
+          <td>${item.stok}</td>
+          <td>${item.diskon || "-"}</td>
+        `;
+        produkList.appendChild(row);
+      });
     });
 }
 
-// Hapus Produk
-function hapusProduk(id) {
-  if (confirm("Hapus produk ini?")) {
-    fetch(`${API}/id/${id}`, { method: "DELETE" }).then(() => loadProducts());
-  }
+// List Pesan
+const pesanList = document.getElementById("pesanList");
+if (pesanList) {
+  fetch(pesanAPI)
+    .then(res => res.json())
+    .then(data => {
+      data.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "pesan-item";
+        div.innerHTML = `<strong>${item.nama}</strong><br>${item.pesan}`;
+        pesanList.appendChild(div);
+      });
+    });
+}
+
+// Hapus Pesan
+const hapusPesanForm = document.getElementById("hapusPesanForm");
+if (hapusPesanForm) {
+  const select = hapusPesanForm.querySelector("select");
+
+  fetch(pesanAPI)
+    .then(res => res.json())
+    .then(data => {
+      data.forEach((item, index) => {
+        const opt = document.createElement("option");
+        opt.value = index + 1;
+        opt.textContent = `${index + 1} - ${item.nama}`;
+        select.appendChild(opt);
+      });
+    });
+
+  hapusPesanForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const index = parseInt(select.value) - 1;
+
+    // Ambil semua data dulu
+    const res = await fetch(pesanAPI);
+    const all = await res.json();
+
+    // Hapus yang dipilih
+    all.splice(index, 1);
+
+    // Hapus semua
+    await fetch(pesanAPI, { method: "DELETE" });
+
+    // Kirim ulang sisa data
+    if (all.length > 0) {
+      await fetch(pesanAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: all }),
+      });
+    }
+
+    alert("Pesan berhasil dihapus!");
+    location.reload();
+  });
 }
