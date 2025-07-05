@@ -3,85 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daftar Produk</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-      padding: 20px;
-    }
-
-    .table-container {
-      max-width: 950px;
-      margin: 60px auto;
-      background: rgba(0, 0, 80, 0.5);
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 0 20px rgba(0,255,255,0.3);
-    }
-
-    h2 {
-      text-align: center;
-      color: #00faff;
-      margin-bottom: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      color: #fff;
-    }
-
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      text-align: left;
-      vertical-align: middle;
-    }
-
-    th {
-      color: #00faff;
-      text-align: center;
-    }
-
-    td img {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-      display: block;
-      margin: auto;
-    }
-
-    @media screen and (max-width: 600px) {
-      table, thead, tbody, th, td, tr {
-        font-size: 13px;
-      }
-    }
-  </style>
+  <title>List Produk</title>
+  <link rel="stylesheet" href="list.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <div class="table-container">
-    <h2>List Produk</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Foto</th>
-          <th>ID</th>
-          <th>Nama</th>
-          <th>Harga</th>
-          <th>Stok</th>
-          <th>Diskon</th>
-        </tr>
-      </thead>
-      <tbody id="produkList"></tbody>
-    </table>
+  <div class="container">
+    <h1>📦 List Produk</h1>
+    <div class="table-container">
+      <table id="produkTable">
+        <thead>
+          <tr>
+            <th>Foto</th>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>Harga</th>
+            <th>Stok</th>
+            <th>Diskon</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data akan dimuat di sini melalui JS -->
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    fetch('https://sheetdb.io/api/v1/vmf2cfpzd8dpr')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector("#produkTable tbody");
+        data.forEach(item => {
+          const row = document.createElement("tr");
+
+          const foto = document.createElement("td");
+          foto.innerHTML = `<img src="${item.foto}" alt="Foto Produk" />`;
+
+          const id = document.createElement("td");
+          id.textContent = item.id;
+
+          const nama = document.createElement("td");
+          nama.textContent = item.nama;
+
+          const harga = document.createElement("td");
+          harga.textContent = item.harga;
+
+          const stok = document.createElement("td");
+          stok.textContent = item.stok;
+
+          const diskon = document.createElement("td");
+          diskon.textContent = item.diskon;
+
+          row.appendChild(foto);
+          row.appendChild(id);
+          row.appendChild(nama);
+          row.appendChild(harga);
+          row.appendChild(stok);
+          row.appendChild(diskon);
+          tbody.appendChild(row);
+        });
+      });
+  </script>
 </body>
 </html>
