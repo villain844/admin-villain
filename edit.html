@@ -1,102 +1,133 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Edit Produk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
-      color: #fff;
+      color: white;
       padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,255,255,0.2);
     }
 
     h2 {
       text-align: center;
+      color: cyan;
       margin-bottom: 20px;
-      text-shadow: 1px 1px 4px #000;
     }
 
-    .produk-item {
-      background: rgba(0, 0, 0, 0.55);
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 10px rgba(0,255,255,0.3);
-    }
-
-    .produk-item input,
-    .produk-item textarea {
+    input, textarea {
       width: 100%;
       padding: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      border: none;
       font-size: 14px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(145deg, #00c2ff, #007bff);
+      color: white;
       border: none;
       border-radius: 8px;
-      background: #f1f1f1;
-    }
-
-    .produk-item textarea {
-      resize: vertical;
-    }
-
-    .produk-item button {
-      background: linear-gradient(145deg, #00bcd4, #0288d1);
-      color: white;
       font-weight: bold;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
       cursor: pointer;
-      transition: 0.2s ease;
-      box-shadow: 0 4px 0 #007aa1;
+      box-shadow: 0 4px 0 #0066cc;
+      transition: all 0.2s ease;
     }
 
-    .produk-item button:active {
-      transform: scale(0.96);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    button:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 0 #004e99;
+    }
+
+    .logout-btn {
+      display: block;
+      margin: 16px auto 0;
+      padding: 8px 16px;
+      background: crimson;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .logout-btn:active {
+      transform: scale(0.95);
     }
   </style>
 </head>
-<body>
-  <h2>Edit Produk</h2>
-  <div id="produk-list"></div>
+<body onload="cekLogin()">
+  <div class="container">
+    <h2>Edit Produk</h2>
+    <input type="text" id="id" placeholder="ID Produk (misalnya: 1)" required>
+    <input type="text" id="foto" placeholder="URL Foto Produk">
+    <input type="text" id="nama" placeholder="Nama Produk">
+    <input type="text" id="harga" placeholder="Harga">
+    <input type="text" id="diskon" placeholder="Diskon (opsional)">
+    <input type="number" id="stok" placeholder="Stok">
+    <textarea id="deskripsi" placeholder="Deskripsi Produk" rows="3"></textarea>
+    <button onclick="editProduk()">Simpan Perubahan</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 
-  <script src="script.js"></script>
   <script>
-    ambilProduk(function(data) {
-      const container = document.getElementById("produk-list");
-      data.forEach(produk => {
-        const div = document.createElement("div");
-        div.className = "produk-item";
-        div.innerHTML = `
-          <input value="${produk.foto}" id="foto-${produk.id}" placeholder="URL Foto">
-          <input value="${produk.nama}" id="nama-${produk.id}" placeholder="Nama">
-          <input value="${produk.stok}" id="stok-${produk.id}" placeholder="Stok">
-          <input value="${produk.harga}" id="harga-${produk.id}" placeholder="Harga">
-          <input value="${produk.diskon}" id="diskon-${produk.id}" placeholder="Diskon">
-          <textarea id="deskripsi-${produk.id}" placeholder="Deskripsi">${produk.deskripsi || ''}</textarea>
-          <input value="${produk.order}" id="order-${produk.id}" placeholder="Link Order">
-          <button onclick="update('${produk.id}')">Simpan</button>
-        `;
-        container.appendChild(div);
-      });
-    });
+    function cekLogin() {
+      if (!localStorage.getItem("loggedIn")) {
+        window.location.href = "index.html";
+      }
+    }
 
-    function update(id) {
-      const dataBaru = {
-        foto: document.getElementById("foto-" + id).value,
-        nama: document.getElementById("nama-" + id).value,
-        stok: document.getElementById("stok-" + id).value,
-        harga: document.getElementById("harga-" + id).value,
-        diskon: document.getElementById("diskon-" + id).value,
-        deskripsi: document.getElementById("deskripsi-" + id).value,
-        order: document.getElementById("order-" + id).value
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "index.html";
+    }
+
+    function editProduk() {
+      const id = document.getElementById("id").value;
+      const foto = document.getElementById("foto").value;
+      const nama = document.getElementById("nama").value;
+      const harga = document.getElementById("harga").value;
+      const diskon = document.getElementById("diskon").value;
+      const stok = document.getElementById("stok").value;
+      const deskripsi = document.getElementById("deskripsi").value;
+
+      const data = {
+        foto, nama, harga, diskon, stok, deskripsi
       };
-      editProduk(id, dataBaru);
+
+      fetch(`https://sheetdb.io/api/v1/vmf2cfpzd8dpr/id/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ data })
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert("Produk berhasil diperbarui!");
+        window.location.reload();
+      })
+      .catch(() => {
+        alert("Gagal memperbarui produk.");
+      });
     }
   </script>
 </body>
