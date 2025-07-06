@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hapus Produk</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
+      margin: 0;
       font-family: 'Poppins', sans-serif;
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
@@ -14,56 +14,58 @@
       padding: 20px;
     }
 
-    .form-container {
-      max-width: 500px;
-      margin: 60px auto;
-      background: rgba(0, 0, 60, 0.6);
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 0 20px rgba(0,255,255,0.3);
-    }
-
     h2 {
       text-align: center;
-      color: #00faff;
+      margin-bottom: 20px;
     }
 
-    select, button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      border-radius: 10px;
+    .produk-item {
+      background: rgba(0,0,0,0.5);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 8px rgba(0,255,255,0.3);
+    }
+
+    .produk-item p {
+      margin: 6px 0;
+    }
+
+    .produk-item button {
+      background: crimson;
       border: none;
-      font-size: 14px;
-    }
-
-    button {
-      background: linear-gradient(to right, #ff4444, #cc0000);
-      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
       font-weight: bold;
-      box-shadow: 0 4px 0 #aa0000;
-      transition: 0.2s ease;
+      color: white;
       cursor: pointer;
+      box-shadow: 0 4px 0 darkred;
     }
 
-    button:active {
-      transform: scale(0.97);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    .produk-item button:active {
+      transform: scale(0.95);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
-
-  <div class="form-container">
-    <h2>Hapus Produk</h2>
-    <form id="deleteProductForm">
-      <select name="id" required>
-        <option value="">Pilih ID Produk</option>
-      </select>
-      <button type="submit">Hapus</button>
-    </form>
-  </div>
+  <h2>Hapus Produk</h2>
+  <div id="produk-container"></div>
 
   <script src="script.js"></script>
+  <script>
+    ambilProduk(function(data) {
+      const container = document.getElementById("produk-container");
+      data.forEach(produk => {
+        const div = document.createElement("div");
+        div.className = "produk-item";
+        div.innerHTML = `
+          <p><strong>${produk.nama}</strong> (ID: ${produk.id})</p>
+          <button onclick="hapusProduk('${produk.id}')">Hapus</button>
+        `;
+        container.appendChild(div);
+      });
+    });
+  </script>
 </body>
 </html>
