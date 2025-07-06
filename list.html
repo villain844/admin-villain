@@ -2,80 +2,118 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <title>List Produk</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar Produk</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
       margin: 0;
+      font-family: 'Poppins', sans-serif;
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
-      color: #fff;
+      color: white;
       padding: 20px;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 24px;
+      color: cyan;
+      margin-bottom: 20px;
     }
 
-    .produk-item {
-      background: rgba(0, 0, 0, 0.5);
+    .produk-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 16px;
+    }
+
+    .produk {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 14px;
       padding: 16px;
-      margin-bottom: 16px;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0,255,255,0.3);
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
+      box-shadow: 0 8px 20px rgba(0,255,255,0.1);
+      transition: 0.3s ease;
     }
 
-    .produk-item img {
-      width: 80px;
-      height: 80px;
-      border-radius: 12px;
+    .produk:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,255,255,0.2);
+    }
+
+    .produk img {
+      width: 100%;
+      height: 120px;
       object-fit: cover;
-      margin-right: 16px;
+      border-radius: 8px;
+      margin-bottom: 10px;
     }
 
-    .produk-detail {
-      flex: 1;
+    .produk h4 {
+      margin: 0;
+      font-size: 16px;
+      color: #00eaff;
     }
 
-    .produk-detail p {
-      margin: 4px 0;
-      font-size: 14px;
+    .produk p {
+      margin: 6px 0;
+      font-size: 13px;
     }
 
-    .produk-detail strong {
-      color: #00ffff;
+    .logout-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 8px 16px;
+      background: crimson;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .logout-btn:active {
+      transform: scale(0.95);
     }
   </style>
 </head>
-<body>
+<body onload="cekLogin(); tampilkanProduk();">
   <h2>Daftar Produk</h2>
-  <div id="produk-list"></div>
+  <div class="produk-list" id="produkList"></div>
 
-  <script src="script.js"></script>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
   <script>
-    ambilProduk(function(data) {
-      const list = document.getElementById("produk-list");
-      data.forEach(produk => {
-        const div = document.createElement("div");
-        div.className = "produk-item";
-        div.innerHTML = `
-          <img src="${produk.foto}" alt="${produk.nama}" />
-          <div class="produk-detail">
-            <p><strong>${produk.nama}</strong></p>
-            <p>Harga: ${produk.harga}</p>
-            <p>Stok: ${produk.stok}</p>
-            <p>Diskon: ${produk.diskon || 'Tidak ada'}</p>
-            <p>Deskripsi: ${produk.deskripsi || '-'}</p>
-          </div>
-        `;
-        list.appendChild(div);
-      });
-    });
+    function cekLogin() {
+      if (!localStorage.getItem("loggedIn")) {
+        window.location.href = "index.html";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "index.html";
+    }
+
+    async function tampilkanProduk() {
+      const res = await fetch("https://sheetdb.io/api/v1/vmf2cfpzd8dpr");
+      const data = await res.json();
+      const list = document.getElementById("produkList");
+
+      if (data.length === 0) {
+        list.innerHTML = "<p style='text-align:center;'>Tidak ada produk</p>";
+        return;
+      }
+
+      list.innerHTML = data.map(p => `
+        <div class="produk">
+          <img src="${p.foto || 'https://via.placeholder.com/150'}" alt="${p.nama}">
+          <h4>${p.nama}</h4>
+          <p><strong>Harga:</strong> ${p.harga}</p>
+          ${p.diskon ? `<p><strong>Diskon:</strong> ${p.diskon}</p>` : ""}
+          <p><strong>Stok:</strong> ${p.stok}</p>
+          <p>${p.deskripsi}</p>
+        </div>
+      `).join('');
+    }
   </script>
 </body>
 </html>
