@@ -1,156 +1,81 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>List Produk</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Produk</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+    body {
       font-family: 'Poppins', sans-serif;
-      background: url('https://files.catbox.moe/u2amkq.jpg') no-repeat center center fixed;
+      margin: 0;
+      background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
-      backdrop-filter: blur(2px);
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background-color: rgba(0,0,0,0.5);
-      z-index: -1;
-    }
-
-    .container {
-      max-width: 95%;
-      margin: 40px auto;
-      background-color: rgba(0, 0, 0, 0.4);
-      border-radius: 20px;
+      color: #fff;
       padding: 20px;
-      color: #fff;
-      box-shadow: 0 0 10px rgba(0,255,255,0.5);
     }
 
-    h1 {
+    h2 {
       text-align: center;
-      color: cyan;
-      text-shadow: 0 0 8px cyan;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
-    .table-container {
-      overflow-x: auto;
+    .produk-item {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.3);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      background-color: rgba(255, 255, 255, 0.1);
+    .produk-item img {
+      width: 80px;
+      height: 80px;
       border-radius: 12px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 12px;
-      text-align: center;
-      word-break: break-word;
-      white-space: normal;
-      color: #fff;
-    }
-
-    th {
-      background-color: rgba(0, 255, 255, 0.2);
-      color: cyan;
-      font-weight: bold;
-    }
-
-    td img {
-      width: 60px;
-      height: 60px;
       object-fit: cover;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,255,255,0.6);
+      margin-right: 16px;
     }
 
-    @media screen and (max-width: 600px) {
-      th, td {
-        font-size: 12px;
-        padding: 8px;
-      }
+    .produk-detail {
+      flex: 1;
+    }
 
-      td img {
-        width: 50px;
-        height: 50px;
-      }
+    .produk-detail p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    .produk-detail strong {
+      color: #00ffff;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>📦 List Produk</h1>
-    <div class="table-container">
-      <table id="produkTable">
-        <thead>
-          <tr>
-            <th>Foto</th>
-            <th>ID</th>
-            <th>Nama</th>
-            <th>Harga</th>
-            <th>Stok</th>
-            <th>Diskon</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Data akan ditampilkan di sini -->
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <h2>Daftar Produk</h2>
+  <div id="produk-list"></div>
 
+  <script src="script.js"></script>
   <script>
-    fetch('https://sheetdb.io/api/v1/vmf2cfpzd8dpr')
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.querySelector("#produkTable tbody");
-        data.forEach(item => {
-          const row = document.createElement("tr");
-
-          const foto = document.createElement("td");
-          foto.innerHTML = `<img src="${item.foto}" alt="Foto Produk" />`;
-
-          const id = document.createElement("td");
-          id.textContent = item.id;
-
-          const nama = document.createElement("td");
-          nama.textContent = item.nama;
-
-          const harga = document.createElement("td");
-          harga.textContent = item.harga;
-
-          const stok = document.createElement("td");
-          stok.textContent = item.stok;
-
-          const diskon = document.createElement("td");
-          diskon.textContent = item.diskon;
-
-          row.appendChild(foto);
-          row.appendChild(id);
-          row.appendChild(nama);
-          row.appendChild(harga);
-          row.appendChild(stok);
-          row.appendChild(diskon);
-          tbody.appendChild(row);
-        });
+    ambilProduk(function(data) {
+      const list = document.getElementById("produk-list");
+      data.forEach(produk => {
+        const div = document.createElement("div");
+        div.className = "produk-item";
+        div.innerHTML = `
+          <img src="${produk.foto}" alt="${produk.nama}" />
+          <div class="produk-detail">
+            <p><strong>${produk.nama}</strong></p>
+            <p>Harga: ${produk.harga}</p>
+            <p>Stok: ${produk.stok}</p>
+            <p>Diskon: ${produk.diskon || 'Tidak ada'}</p>
+            <p>Deskripsi: ${produk.deskripsi || '-'}</p>
+          </div>
+        `;
+        list.appendChild(div);
       });
+    });
   </script>
 </body>
 </html>
