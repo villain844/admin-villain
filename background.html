@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ganti Background - Web Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      color: cyan;
+      text-shadow: 0 0 5px #0ff;
+      margin-bottom: 20px;
+    }
+
+    .bg-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .bg-item {
+      background: rgba(0,0,0,0.5);
+      padding: 10px;
+      border-radius: 14px;
+      box-shadow: 0 0 12px rgba(0,255,255,0.3);
+    }
+
+    .bg-item img {
+      width: 140px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      box-shadow: 0 0 8px #00ffff;
+    }
+
+    .bg-item img:hover {
+      transform: scale(1.05);
+    }
+
+    .bg-item button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-weight: bold;
+      background: #00bbff;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 3px 0 #0078a0;
+      cursor: pointer;
+      color: black;
+    }
+
+    .bg-item button:active {
+      transform: scale(0.97);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 12px cyan;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 26px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Ganti Background Tampilan Web 1</h1>
+  <div class="bg-grid" id="bg-container"></div>
+
+  <!-- Modal Preview -->
+  <div id="img-modal" class="modal" onclick="closeModal()">
+    <span class="modal-close">&times;</span>
+    <img id="img-preview" class="modal-content">
+  </div>
+
+  <script>
+    const bgList = [
+      { id: "1", url: "https://files.catbox.moe/28c7fi.jpg" },
+      { id: "2", url: "https://files.catbox.moe/u2amkq.jpg" }
+    ];
+
+    async function loadBackgrounds() {
+      const container = document.getElementById("bg-container");
+      let current = "";
+      try {
+        const res = await fetch("https://sheetdb.io/api/v1/wdiag49r7wv0s");
+        const data = await res.json();
+        current = data[0]?.background || "";
+      } catch {}
+
+      container.innerHTML = '';
+      bgList.forEach(bg => {
+        const item = document.createElement("div");
+        item.className = "bg-item";
+        item.innerHTML = `
+          <img src="${bg.url}" onclick="showPreview('${bg.url}')">
+          <button onclick="setBackground('${bg.url}')">
+            ${current === bg.url ? 'Dipakai' : 'Pakai'}
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    async function setBackground(url) {
+      try {
+        await fetch("https://sheetdb.io/api/v1/wdiag49r7wv0s", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data: [{ background: url }] })
+        });
+        loadBackgrounds();
+      } catch {
+        alert("Gagal menyimpan background.");
+      }
+    }
+
+    function showPreview(src) {
+      document.getElementById("img-modal").style.display = "flex";
+      document.getElementById("img-preview").src = src;
+    }
+
+    function closeModal() {
+      document.getElementById("img-modal").style.display = "none";
+    }
+
+    window.onload = loadBackgrounds;
+  </script>
+
+</body>
+</html>
