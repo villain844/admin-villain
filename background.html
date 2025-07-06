@@ -2,115 +2,175 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <title>Atur Background Web 1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ganti Background</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #001f3f;
-      color: white;
+      margin: 0;
       padding: 20px;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://files.catbox.moe/28c7fi.jpg') center/cover no-repeat fixed;
+      color: white;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 30px;
+      color: cyan;
+      margin-bottom: 20px;
     }
 
-    .bg-grid {
+    .bg-container {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
       gap: 20px;
-    }
-
-    .bg-item {
-      background: rgba(255,255,255,0.07);
-      border-radius: 12px;
-      overflow: hidden;
-      width: 280px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0,255,255,0.2);
-    }
-
-    .bg-item img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      cursor: zoom-in;
-      transition: transform 0.2s ease;
-    }
-
-    .bg-item img:hover {
-      transform: scale(1.05);
-    }
-
-    .bg-item button {
-      background: #00bcd4;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      font-weight: bold;
-      width: 100%;
-      cursor: pointer;
-      transition: 0.2s ease;
-      box-shadow: 0 4px 0 #007c91;
-    }
-
-    .bg-item button:hover {
-      background: #0097a7;
-    }
-
-    .active-btn {
-      background: #007c91 !important;
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 99;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
       justify-content: center;
-      align-items: center;
     }
 
-    .modal img {
-      max-width: 90%;
-      max-height: 90%;
+    .bg-card {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: 0 6px 20px rgba(0, 255, 255, 0.2);
+      width: 240px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .bg-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
       border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 8px cyan;
     }
 
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 30px;
-      color: white;
+    .bg-card button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
+      background: linear-gradient(145deg, #00cfff, #0077ff);
+      color: white;
+      box-shadow: 0 4px 0 #005bcc;
+      transition: all 0.2s ease;
+    }
+
+    .bg-card button:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 0 #004999;
+    }
+
+    .add-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 50px;
+      background: limegreen;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #228b22;
+      transition: all 0.2s ease;
+    }
+
+    .add-btn:active {
+      transform: scale(0.96);
+    }
+
+    .logout-btn {
+      display: block;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      background: crimson;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .logout-btn:active {
+      transform: scale(0.96);
     }
   </style>
 </head>
-<body>
+<body onload="cekLogin(); loadBackgrounds();">
+
+  <h2>Atur Background Website 1</h2>
+
+  <div class="bg-container" id="bgContainer"></div>
+
+  <button class="add-btn" onclick="tambahBackground()">+ Tambah Background</button>
+  <button class="logout-btn" onclick="logout()">Logout</button>
 
   <script>
-    if (localStorage.getItem("loggedIn") !== "true") {
-      window.location.href = "login.html";
+    const bgAPI = "https://sheetdb.io/api/v1/wdiag49r7wv0s";
+    const activeKey = "activeBackground";
+
+    function cekLogin() {
+      if (!localStorage.getItem("loggedIn")) {
+        window.location.href = "index.html";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "index.html";
+    }
+
+    function tambahBackground() {
+      const url = prompt("Masukkan URL gambar background:");
+      if (!url) return;
+
+      fetch(bgAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: [{ background: url }] })
+      })
+      .then(() => {
+        alert("Background berhasil ditambahkan!");
+        loadBackgrounds();
+      })
+      .catch(() => alert("Gagal menambahkan background"));
+    }
+
+    function pakaiBackground(url, button) {
+      localStorage.setItem(activeKey, url);
+      const buttons = document.querySelectorAll(".bg-card button");
+      buttons.forEach(btn => btn.textContent = "Pakai");
+      button.textContent = "Dipakai";
+    }
+
+    function previewImage(url) {
+      const img = window.open("", "_blank");
+      img.document.write(`<img src="${url}" style="max-width:100%;border-radius:12px;">`);
+    }
+
+    async function loadBackgrounds() {
+      try {
+        const res = await fetch(bgAPI);
+        const data = await res.json();
+        const container = document.getElementById("bgContainer");
+        const aktif = localStorage.getItem(activeKey);
+
+        container.innerHTML = data.map(bg => `
+          <div class="bg-card">
+            <img src="${bg.background}" onclick="previewImage('${bg.background}')">
+            <button onclick="pakaiBackground('${bg.background}', this)">
+              ${aktif === bg.background ? "Dipakai" : "Pakai"}
+            </button>
+          </div>
+        `).join("");
+      } catch (err) {
+        console.error("Gagal mengambil background");
+      }
     }
   </script>
-
-  <h2>Pilih Background Website</h2>
-
-  <div class="bg-grid" id="background-list"></div>
-
-  <!-- Modal -->
-  <div class="modal" id="bg-modal" onclick="closeModal()">
-    <span class="modal-close" onclick="closeModal()">×</span>
-    <img id="bg-preview" />
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
