@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edit Produk</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
+      margin: 0;
       font-family: 'Poppins', sans-serif;
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
@@ -14,60 +14,90 @@
       padding: 20px;
     }
 
-    .form-container {
-      max-width: 600px;
-      margin: 60px auto;
-      background: rgba(0, 0, 80, 0.6);
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-    }
-
     h2 {
       text-align: center;
-      color: #00faff;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 4px #000;
     }
 
-    select, input, textarea, button {
+    .produk-item {
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.3);
+    }
+
+    .produk-item input,
+    .produk-item textarea {
       width: 100%;
-      margin: 10px 0;
-      padding: 12px;
+      padding: 10px;
+      margin-bottom: 10px;
       font-size: 14px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
+      background: #f1f1f1;
     }
 
-    button {
-      background: linear-gradient(145deg, #00faff, #00a1d6);
-      color: #000;
+    .produk-item textarea {
+      resize: vertical;
+    }
+
+    .produk-item button {
+      background: linear-gradient(145deg, #00bcd4, #0288d1);
+      color: white;
       font-weight: bold;
-      box-shadow: 0 4px 0 #008fa3;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
       transition: 0.2s ease;
+      box-shadow: 0 4px 0 #007aa1;
     }
 
-    button:active {
+    .produk-item button:active {
       transform: scale(0.96);
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
-
-  <div class="form-container">
-    <h2>Edit Produk</h2>
-    <form id="editProductForm">
-      <select name="id" required>
-        <option value="">Pilih ID Produk</option>
-      </select>
-      <input type="text" name="nama" placeholder="Nama Baru" />
-      <input type="text" name="harga" placeholder="Harga Baru" />
-      <input type="text" name="stok" placeholder="Stok Baru" />
-      <textarea name="deskripsi" placeholder="Deskripsi Baru"></textarea>
-      <button type="submit">Update Produk</button>
-    </form>
-  </div>
+  <h2>Edit Produk</h2>
+  <div id="produk-list"></div>
 
   <script src="script.js"></script>
+  <script>
+    ambilProduk(function(data) {
+      const container = document.getElementById("produk-list");
+      data.forEach(produk => {
+        const div = document.createElement("div");
+        div.className = "produk-item";
+        div.innerHTML = `
+          <input value="${produk.foto}" id="foto-${produk.id}" placeholder="URL Foto">
+          <input value="${produk.nama}" id="nama-${produk.id}" placeholder="Nama">
+          <input value="${produk.stok}" id="stok-${produk.id}" placeholder="Stok">
+          <input value="${produk.harga}" id="harga-${produk.id}" placeholder="Harga">
+          <input value="${produk.diskon}" id="diskon-${produk.id}" placeholder="Diskon">
+          <textarea id="deskripsi-${produk.id}" placeholder="Deskripsi">${produk.deskripsi || ''}</textarea>
+          <input value="${produk.order}" id="order-${produk.id}" placeholder="Link Order">
+          <button onclick="update('${produk.id}')">Simpan</button>
+        `;
+        container.appendChild(div);
+      });
+    });
+
+    function update(id) {
+      const dataBaru = {
+        foto: document.getElementById("foto-" + id).value,
+        nama: document.getElementById("nama-" + id).value,
+        stok: document.getElementById("stok-" + id).value,
+        harga: document.getElementById("harga-" + id).value,
+        diskon: document.getElementById("diskon-" + id).value,
+        deskripsi: document.getElementById("deskripsi-" + id).value,
+        order: document.getElementById("order-" + id).value
+      };
+      editProduk(id, dataBaru);
+    }
+  </script>
 </body>
 </html>
