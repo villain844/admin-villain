@@ -11,9 +11,9 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      margin: 0;
       background: linear-gradient(to right, #000428, #004e92);
       color: #fff;
-      margin: 0;
     }
 
     form {
@@ -50,6 +50,7 @@
       border-radius: 8px;
       cursor: pointer;
       box-shadow: 0 4px 0 #007aa1;
+      transition: 0.2s ease;
     }
 
     button:active {
@@ -79,8 +80,7 @@
       const pass = document.getElementById("password").value.trim();
 
       if (user === "admin" && pass === "admin123") {
-        // ✅ Simpan status login
-        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("loggedIn", "true"); // ✅ Penting!
         window.location.href = "index.html";
         return false;
       } else {
