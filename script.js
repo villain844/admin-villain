@@ -1,192 +1,124 @@
-const produkAPI = "https://sheetdb.io/api/v1/vmf2cfpzd8dpr";
-const pesanAPI = "https://sheetdb.io/api/v1/hkydnwssgudey";
-
-// Tambah Produk
-const addForm = document.getElementById("addProductForm");
-if (addForm) {
-  addForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(addForm));
-    const response = await fetch(produkAPI, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: data }),
-    });
-    alert("Produk berhasil ditambahkan!");
-    addForm.reset();
-  });
-}
-
-// Edit Produk
-const editForm = document.getElementById("editProductForm");
-if (editForm) {
-  const select = editForm.querySelector("select");
-
-  fetch(produkAPI)
-    .then(res => res.json())
-    .then(data => {
-      data.forEach(item => {
-        const opt = document.createElement("option");
-        opt.value = item.id;
-        opt.textContent = `${item.id} - ${item.nama}`;
-        select.appendChild(opt);
-      });
-    });
-
-  editForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const id = select.value;
-    const data = Object.fromEntries(new FormData(editForm));
-    delete data.id;
-
-    const response = await fetch(`${produkAPI}/id/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data }),
-    });
-    alert("Produk berhasil diupdate!");
-    editForm.reset();
-  });
-}
-
-// Delete Produk
-const deleteForm = document.getElementById("deleteProductForm");
-if (deleteForm) {
-  const select = deleteForm.querySelector("select");
-
-  fetch(produkAPI)
-    .then(res => res.json())
-    .then(data => {
-      data.forEach(item => {
-        const opt = document.createElement("option");
-        opt.value = item.id;
-        opt.textContent = `${item.id} - ${item.nama}`;
-        select.appendChild(opt);
-      });
-    });
-
-  deleteForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const id = select.value;
-    const response = await fetch(`${produkAPI}/id/${id}`, { method: "DELETE" });
-    alert("Produk berhasil dihapus!");
-    deleteForm.reset();
-  });
-}
-
-// List Produk
-const produkList = document.getElementById("produkList");
-if (produkList) {
-  fetch(produkAPI)
-    .then(res => res.json())
-    .then(data => {
-      data.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><img src="${item.foto}" alt="${item.nama}" /></td>
-          <td>${item.id}</td>
-          <td>${item.nama}</td>
-          <td>${item.harga}</td>
-          <td>${item.stok}</td>
-          <td>${item.diskon || "-"}</td>
-        `;
-        produkList.appendChild(row);
-      });
-    });
-}
-// List Pesan
-const pesanList = document.getElementById("pesanList");
-if (pesanList) {
-  fetch(pesanAPI)
-    .then(res => res.json())
-    .then(data => {
-      data.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "pesan-item";
-        div.innerHTML = `<strong>${item.nama}</strong><br>${item.pesan}`;
-        pesanList.appendChild(div);
-      });
-    });
-}
-
-// Hapus Pesan
-const hapusPesanForm = document.getElementById("hapusPesanForm");
-if (hapusPesanForm) {
-  const select = hapusPesanForm.querySelector("select");
-
-  fetch(pesanAPI)
-    .then(res => res.json())
-    .then(data => {
-      data.forEach((item, index) => {
-        const opt = document.createElement("option");
-        opt.value = index + 1;
-        opt.textContent = `${index + 1} - ${item.nama}`;
-        select.appendChild(opt);
-      });
-    });
-
-  hapusPesanForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const index = parseInt(select.value) - 1;
-
-    // Ambil semua data dulu
-    const res = await fetch(pesanAPI);
-    const all = await res.json();
-
-    // Hapus yang dipilih
-    all.splice(index, 1);
-
-    // Hapus semua
-    await fetch(pesanAPI, { method: "DELETE" });
-
-    // Kirim ulang sisa data
-    if (all.length > 0) {
-      await fetch(pesanAPI, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: all }),
-      });
-    }
-
-    alert("Pesan berhasil dihapus!");
-    location.reload();
-  });
-}
-
-function showPreview(src) {
-  const modal = document.getElementById('preview-modal');
-  const img = document.getElementById('preview-img');
-  modal.style.display = 'flex';
-  img.src = src;
-}
-
-async function simpanBackground(url, btn) {
-  try {
-    btn.textContent = "Menyimpan...";
-    const res = await fetch("https://sheetdb.io/api/v1/wdiag49r7wv0s/id/1", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        data: { background: url }
-      })
-    });
-
-    if (res.ok) {
-      document.querySelectorAll(".use-btn").forEach(b => {
-        b.textContent = "Pakai";
-        b.disabled = false;
-      });
-      btn.textContent = "Dipakai";
-      btn.disabled = true;
-      alert("Background berhasil disimpan.");
-    } else {
-      alert("Gagal menyimpan background.");
-      btn.textContent = "Pakai";
-    }
-  } catch (err) {
-    alert("Terjadi kesalahan jaringan.");
-    console.error(err);
+// Proteksi login otomatis
+if (window.location.pathname !== "/login.html") {
+  if (localStorage.getItem("admin_login") !== "true") {
+    window.location.href = "login.html";
   }
+}
+
+// Fungsi logout
+function logout() {
+  localStorage.removeItem("admin_login");
+  window.location.href = "login.html";
+}
+
+// Tambah produk
+function tambahProduk(event) {
+  event.preventDefault();
+
+  const data = {
+    id: Date.now(),
+    foto: document.getElementById("foto").value,
+    nama: document.getElementById("nama").value,
+    stok: document.getElementById("stok").value,
+    harga: document.getElementById("harga").value,
+    diskon: document.getElementById("diskon").value,
+    deskripsi: document.getElementById("deskripsi").value,
+    order: document.getElementById("order").value
+  };
+
+  fetch("https://sheetdb.io/api/v1/vmf2cfpzd8dpr", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data })
+  })
+    .then(res => res.json())
+    .then(() => {
+      alert("Produk berhasil ditambahkan!");
+      document.getElementById("form-produk").reset();
+    })
+    .catch(() => alert("Gagal menambahkan produk"));
+}
+
+// Simpan background
+function pilihBackground(url) {
+  const data = {
+    id: "1",
+    background: url
+  };
+
+  fetch("https://sheetdb.io/api/v1/wdiag49r7wv0s/id/1", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data })
+  })
+    .then(() => {
+      alert("Background berhasil diubah");
+      location.reload();
+    })
+    .catch(() => alert("Gagal menyimpan background"));
+}
+
+// Hapus produk
+function hapusProduk(id) {
+  if (!confirm("Yakin ingin menghapus produk ini?")) return;
+
+  fetch(`https://sheetdb.io/api/v1/vmf2cfpzd8dpr/id/${id}`, {
+    method: "DELETE"
+  })
+    .then(() => {
+      alert("Produk berhasil dihapus");
+      location.reload();
+    })
+    .catch(() => alert("Gagal menghapus produk"));
+}
+
+// Edit produk
+function editProduk(id, dataBaru) {
+  fetch(`https://sheetdb.io/api/v1/vmf2cfpzd8dpr/id/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: dataBaru })
+  })
+    .then(() => {
+      alert("Produk berhasil diupdate");
+      location.reload();
+    })
+    .catch(() => alert("Gagal mengedit produk"));
+}
+
+// Ambil produk
+function ambilProduk(callback) {
+  fetch("https://sheetdb.io/api/v1/vmf2cfpzd8dpr")
+    .then(res => res.json())
+    .then(data => callback(data));
+}
+
+// Ambil background
+function ambilBackground(callback) {
+  fetch("https://sheetdb.io/api/v1/wdiag49r7wv0s")
+    .then(res => res.json())
+    .then(data => {
+      if (data.length > 0) callback(data[0].background);
+    });
+}
+
+// Ambil pesan pelanggan
+function ambilPesan(callback) {
+  fetch("https://sheetdb.io/api/v1/hkydnwssgudey")
+    .then(res => res.json())
+    .then(data => callback(data));
+}
+
+// Hapus pesan pelanggan
+function hapusPesan(id) {
+  if (!confirm("Yakin ingin menghapus pesan ini?")) return;
+
+  fetch(`https://sheetdb.io/api/v1/hkydnwssgudey/id/${id}`, {
+    method: "DELETE"
+  })
+    .then(() => {
+      alert("Pesan berhasil dihapus");
+      location.reload();
+    })
+    .catch(() => alert("Gagal menghapus pesan"));
 }
