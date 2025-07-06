@@ -3,41 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel</title>
+  <title>Admin Villain</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
 </head>
 <body>
-
-  <script>
-    // ✅ Cek status login
-    if (localStorage.getItem("loggedIn") !== "true") {
-      window.location.href = "login.html";
-    }
-  </script>
-
   <header>
-    <h1>Selamat Datang Admin</h1>
-    <button onclick="logout()">Logout</button>
+    <h1>ADMIN PANEL</h1>
+    <nav>
+      <a href="tambah.html">Tambah Produk</a>
+      <a href="edit.html">Edit Produk</a>
+      <a href="delete.html">Hapus Produk</a>
+      <a href="list.html">List Produk</a>
+      <a href="pesan.html">Lihat Pesan</a>
+      <a href="delete-pesan.html">Hapus Pesan</a>
+      <a href="background.html">Background</a>
+    </nav>
   </header>
 
   <main>
-    <p>Di sini adalah halaman admin utama.</p>
-    <!-- Tambahkan link menu ke fitur lain -->
-    <ul>
-      <li><a href="tambah.html">Tambah Produk</a></li>
-      <Li><a href="edit.html">Edit Produk</a></Li>
-      <li><a href="list.html">List Produk</a></li>
-      <li><a href="pesan.html">Lihat Pesan</a></li>
-      <li><a href="background.html">Ganti Background</a></li>
-    </ul>
+    <h2>Data Produk</h2>
+    <div id="produk-list" class="produk-grid"></div>
   </main>
-
-  <script>
-    function logout() {
-      localStorage.removeItem("loggedIn");
-      window.location.href = "login.html";
-    }
-  </script>
-
 </body>
 </html>
