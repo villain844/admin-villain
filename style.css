@@ -2,42 +2,77 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 20px;
-  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
   color: #fff;
+  min-height: 100vh;
 }
 
-h1 {
+.admin-header {
   text-align: center;
-  font-size: 28px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-.menu {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 400px;
-  margin: 0 auto;
+.admin-header h1 {
+  font-size: 26px;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.menu a {
-  background-color: #00bcd4;
-  padding: 12px;
-  border-radius: 10px;
+.admin-header p {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.menu-grid a {
+  background: #00bcd4;
+  padding: 14px;
+  text-align: center;
   color: white;
-  text-align: center;
+  font-weight: 600;
+  border-radius: 10px;
   text-decoration: none;
-  font-weight: bold;
-  box-shadow: 0 4px 0 #007aa1;
-  transition: 0.2s ease;
+  box-shadow: 0 4px 0 #007aa1, 0 0 8px rgba(0, 188, 212, 0.4);
+  transition: all 0.2s ease;
 }
 
-.menu a:hover {
-  transform: scale(1.03);
-  background-color: #00acc1;
+.menu-grid a:hover {
+  transform: scale(1.05);
+  background: #00acc1;
+  box-shadow: 0 6px 14px rgba(0, 255, 255, 0.6);
+}
+
+.logout-wrapper {
+  display: flex;
+  justify-content: center;
 }
 
 .logout-btn {
-  margin-top: 20px;
-  background-color: crimson !important;
+  background-color: crimson;
+  color: white;
+  font-weight: bold;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #a30000;
+  transition: all 0.15s ease;
+}
+
+.logout-btn:hover {
+  transform: scale(1.03);
+  background-color: #d60000;
+}
+
+.logout-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 0 #a30000;
 }
