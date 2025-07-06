@@ -152,3 +152,41 @@ if (hapusPesanForm) {
     location.reload();
   });
 }
+
+function showPreview(src) {
+  const modal = document.getElementById('preview-modal');
+  const img = document.getElementById('preview-img');
+  modal.style.display = 'flex';
+  img.src = src;
+}
+
+async function simpanBackground(url, btn) {
+  try {
+    btn.textContent = "Menyimpan...";
+    const res = await fetch("https://sheetdb.io/api/v1/wdiag49r7wv0s/id/1", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        data: { background: url }
+      })
+    });
+
+    if (res.ok) {
+      document.querySelectorAll(".use-btn").forEach(b => {
+        b.textContent = "Pakai";
+        b.disabled = false;
+      });
+      btn.textContent = "Dipakai";
+      btn.disabled = true;
+      alert("Background berhasil disimpan.");
+    } else {
+      alert("Gagal menyimpan background.");
+      btn.textContent = "Pakai";
+    }
+  } catch (err) {
+    alert("Terjadi kesalahan jaringan.");
+    console.error(err);
+  }
+}
