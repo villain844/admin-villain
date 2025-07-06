@@ -3,23 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Admin - Villain Hosting</title>
+  <title>Admin Panel Villain</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <div class="container">
-    <h1>Dashboard Admin Villain Hosting</h1>
-    <div class="menu-grid">
-      <div class="menu-item"><a href="tambah.html">Tambah Produk</a></div>
-      <div class="menu-item"><a href="edit.html">Edit Produk</a></div>
-      <div class="menu-item"><a href="delete.html">Delete Produk</a></div>
-      <div class="menu-item"><a href="list.html">List Produk</a></div>
-      <div class="menu-item"><a href="pesan.html">Lihat Pesan</a></div>
-      <div class="menu-item"><a href="delete-pesan.html">Hapus Pesan</a></div>
-    </div>
-  </div>
+  <header>
+    <h1>✉️ TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN</h1>
+    <nav>
+      <a href="tambah.html">➕ Tambah Produk</a>
+      <a href="edit.html">✏️ Edit Produk</a>
+      <a href="delete.html">🗑️ Hapus Produk</a>
+      <a href="list.html">📦 Lihat Produk</a>
+      <a href="background.html">🎨 Ganti Background</a>
+      <a href="delete-pesan.html">🧹 Hapus Pesan</a>
+    </nav>
+  </header>
 
+  <main id="pesan-container">
+    <p class="loading">Memuat pesan...</p>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
