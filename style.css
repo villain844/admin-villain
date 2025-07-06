@@ -1,43 +1,51 @@
 body {
   font-family: 'Poppins', sans-serif;
-  background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
+  background: url("https://files.catbox.moe/28c7fi.jpg") no-repeat center center fixed;
   background-size: cover;
-  padding: 20px;
   color: #fff;
   margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
 header {
+  background-color: rgba(0,0,0,0.6);
+  padding: 16px;
   text-align: center;
-  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
 header h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-shadow: 1px 1px 4px #000;
-  margin-bottom: 10px;
+  margin: 0;
+  color: cyan;
+  font-size: 24px;
 }
 
 nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+  margin-top: 10px;
 }
 
 nav a {
-  background: #03a9f4;
-  padding: 10px 16px;
-  color: #fff;
-  border-radius: 10px;
+  color: #00ffff;
+  margin: 0 8px;
   text-decoration: none;
   font-weight: bold;
-  transition: 0.2s;
-  box-shadow: 0 4px 10px rgba(0,255,255,0.3);
 }
 
-nav a:hover {
-  background: #0288d1;
-  transform: scale(1.05);
+main {
+  padding: 20px;
+  text-align: center;
+}
+
+h2 {
+  color: #00ffff;
+  text-shadow: 0 0 5px cyan;
+  margin-bottom: 20px;
+}
+
+.produk-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
