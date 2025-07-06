@@ -3,28 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel Villain</title>
+  <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
-
+  <script>
+    if (localStorage.getItem("admin_login") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
   <header>
-    <h1>✉️ TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN</h1>
+    <h1>Panel Admin</h1>
     <nav>
-      <a href="tambah.html">➕ Tambah Produk</a>
-      <a href="edit.html">✏️ Edit Produk</a>
-      <a href="delete.html">🗑️ Hapus Produk</a>
-      <a href="list.html">📦 Lihat Produk</a>
-      <a href="background.html">🎨 Ganti Background</a>
-      <a href="delete-pesan.html">🧹 Hapus Pesan</a>
+      <a href="tambah.html">Tambah Produk</a>
+      <a href="edit.html">Edit Produk</a>
+      <a href="delete.html">Hapus Produk</a>
+      <a href="list.html">Lihat Produk</a>
+      <a href="pesan.html">Pesan Pelanggan</a>
+      <a href="delete-pesan.html">Hapus Pesan</a>
+      <a href="background.html">Ganti Background</a>
     </nav>
   </header>
-
-  <main id="pesan-container">
-    <p class="loading">Memuat pesan...</p>
-  </main>
-
-  <script src="script.js"></script>
 </body>
 </html>
