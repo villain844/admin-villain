@@ -1,89 +1,125 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lihat Pesan Pelanggan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>Pesan Pelanggan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      margin: 0;
       font-family: 'Poppins', sans-serif;
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
-      margin: 0;
-      padding: 0;
       color: white;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
+      min-height: 100vh;
       padding: 20px;
-      background: rgba(0,0,0,0.6);
-      border-radius: 18px;
-      box-shadow: 0 0 12px cyan;
     }
 
-    h2 {
+    .header {
       text-align: center;
-      color: cyan;
-      text-shadow: 0 0 6px cyan;
       margin-bottom: 20px;
     }
 
-    .pesan-item {
-      background: rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 12px;
-      box-shadow: 0 0 6px rgba(0,255,255,0.25);
+    .header h2 {
+      margin-bottom: 10px;
+      font-size: 22px;
+      color: cyan;
     }
 
-    .pesan-item b {
+    .logout-btn {
+      padding: 8px 16px;
+      background: crimson;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 0 darkred;
+    }
+
+    .logout-btn:active {
+      transform: scale(0.96);
+      box-shadow: none;
+    }
+
+    .pesan-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .pesan-card {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,255,255,0.3);
+    }
+
+    .pesan-card h3 {
+      margin: 0;
+      font-size: 16px;
       color: #00ffff;
     }
 
-    .pesan-item span {
-      display: block;
-      color: #eee;
-      margin-top: 6px;
-      line-height: 1.4;
+    .pesan-card p {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: #ddd;
+      line-height: 1.5;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h2>📬 Pesan dari Pelanggan</h2>
-    <div id="list-pesan">Memuat pesan...</div>
+<body onload="cekLogin(); getPesan()">
+
+  <div class="header">
+    <h2>TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN</h2>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="pesan-container" id="pesan-list">
+    <p>Memuat pesan...</p>
   </div>
 
   <script>
-    const API = "https://sheetdb.io/api/v1/hkydnwssgudey";
+    function cekLogin() {
+      if (!localStorage.getItem("loggedIn")) {
+        window.location.href = "index.html";
+      }
+    }
 
-    fetch(API)
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById("list-pesan");
-        container.innerHTML = '';
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "index.html";
+    }
+
+    async function getPesan() {
+      const container = document.getElementById("pesan-list");
+      container.innerHTML = '';
+
+      try {
+        const res = await fetch("https://sheetdb.io/api/v1/hkydnwssgudey");
+        const data = await res.json();
 
         if (data.length === 0) {
-          container.innerHTML = "<p style='text-align:center;color:#ccc'>Belum ada pesan.</p>";
+          container.innerHTML = "<p>Belum ada pesan.</p>";
           return;
         }
 
-        data.forEach(item => {
-          const div = document.createElement("div");
-          div.className = "pesan-item";
-          div.innerHTML = `
-            <b>${item.nama}</b>
-            <span>${item.pesan}</span>
+        data.forEach((pesan, i) => {
+          const card = document.createElement("div");
+          card.className = "pesan-card";
+          card.innerHTML = `
+            <h3>${i + 1}. ${pesan.nama}</h3>
+            <p>${pesan.pesan}</p>
           `;
-          container.appendChild(div);
+          container.appendChild(card);
         });
-      })
-      .catch(() => {
-        document.getElementById("list-pesan").innerHTML = "<p style='color:red;text-align:center;'>Gagal mengambil data.</p>";
-      });
+
+      } catch (e) {
+        container.innerHTML = "<p>Gagal memuat pesan.</p>";
+      }
+    }
   </script>
+
 </body>
 </html>
