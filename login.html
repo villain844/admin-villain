@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Admin</title>
   <style>
@@ -21,6 +21,7 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 12px rgba(0,255,255,0.4);
+      width: 300px;
     }
 
     h2 {
@@ -48,6 +49,7 @@
       font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
+      box-shadow: 0 4px 0 #007aa1;
     }
 
     button:active {
@@ -76,9 +78,10 @@
       const user = document.getElementById("username").value.trim();
       const pass = document.getElementById("password").value.trim();
 
-      // Ganti sesuai dengan username dan password kamu
       if (user === "admin" && pass === "admin123") {
-        window.location.href = "index.html"; // ✅ pastikan file ini ada
+        // ✅ Simpan status login
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "index.html";
         return false;
       } else {
         document.getElementById("error-msg").textContent = "Username atau password salah!";
