@@ -2,156 +2,130 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ganti Background - Villain Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ganti Background Web 1</title>
   <style>
-    * {
-      box-sizing: border-box;
+    body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
-      background-size: cover;
-      min-height: 100vh;
-      color: #fff;
       padding: 20px;
+      background: url('https://files.catbox.moe/28c7fi.jpg') center center fixed;
+      background-size: cover;
+      color: #fff;
     }
 
-    h2.title {
+    h2 {
       text-align: center;
       margin-bottom: 20px;
     }
 
-    .bg-container {
+    .bg-list {
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 20px;
     }
 
     .bg-card {
-      background: rgba(255,255,255,0.05);
-      padding: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 12px;
       border-radius: 14px;
-      text-align: center;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 4px 12px rgba(0,255,255,0.4);
-    }
-
-    .bg-img {
-      width: 200px;
-      height: 120px;
-      border-radius: 10px;
-      object-fit: cover;
-      cursor: pointer;
-      margin-bottom: 10px;
-      box-shadow: 0 0 10px cyan;
-      transition: transform 0.2s ease;
-    }
-
-    .bg-img:hover {
-      transform: scale(1.03);
-    }
-
-    .use-btn {
-      background: linear-gradient(145deg, #008cff, #0051ff);
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .use-btn:active {
-      transform: scale(0.95);
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0; top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.85);
-      justify-content: center;
+      box-shadow: 0 0 10px rgba(0,255,255,0.4);
+      display: flex;
+      flex-direction: column;
       align-items: center;
     }
 
-    .modal-img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 10px;
-      box-shadow: 0 0 20px cyan;
+    .bg-card img {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .bg-card button {
+      background: #00bcd4;
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #007aa1;
+    }
+
+    .bg-card button:active {
+      transform: scale(0.96);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    .add-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .add-section input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      width: 70%;
+      max-width: 320px;
+      margin-bottom: 10px;
+    }
+
+    .add-section button {
+      background: limegreen;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 green;
+    }
+
+    .add-section button:active {
+      transform: scale(0.96);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
     }
   </style>
 </head>
 <body>
 
-  <h2 class="title">Pilih Background Website</h2>
+  <h2>Ganti Background Web 1</h2>
+  <div class="bg-list" id="bg-container"></div>
 
-  <div class="bg-container">
-    <div class="bg-card">
-      <img src="https://files.catbox.moe/u2amkq.jpg" class="bg-img" onclick="showPreview(this.src)" />
-      <button class="use-btn" onclick="simpanBackground('https://files.catbox.moe/u2amkq.jpg', this)">Pakai</button>
-    </div>
-    <div class="bg-card">
-      <img src="https://files.catbox.moe/28c7fi.jpg" class="bg-img" onclick="showPreview(this.src)" />
-      <button class="use-btn" onclick="simpanBackground('https://files.catbox.moe/28c7fi.jpg', this)">Pakai</button>
-    </div>
+  <div class="add-section">
+    <input type="text" id="bg-url" placeholder="Link Gambar Background">
+    <br>
+    <button onclick="tambahBackground()">Tambah Background</button>
   </div>
 
-  <!-- Modal Preview Gambar -->
-  <div id="preview-modal" class="modal" onclick="this.style.display='none'">
-    <img id="preview-img" class="modal-img" />
-  </div>
-
+  <script src="script.js"></script>
   <script>
-    function showPreview(src) {
-      const modal = document.getElementById('preview-modal');
-      const img = document.getElementById('preview-img');
-      modal.style.display = 'flex';
-      img.src = src;
-    }
+    ambilBackground(function(data) {
+      const container = document.getElementById("bg-container");
+      const active = localStorage.getItem("bg-pakai");
 
-    async function simpanBackground(url, btn) {
-      try {
-        btn.textContent = "Menyimpan...";
-        const res = await fetch("https://sheetdb.io/api/v1/wdiag49r7wv0s/id/1", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            data: { background: url }
-          })
-        });
+      data.forEach(bg => {
+        const card = document.createElement("div");
+        card.className = "bg-card";
+        card.innerHTML = `
+          <img src="${bg.background}" onclick="previewGambar('${bg.background}')">
+          <button onclick="pakaiBackground('${bg.id}')">
+            ${active === bg.id ? 'Dipakai' : 'Pakai'}
+          </button>
+        `;
+        container.appendChild(card);
+      });
+    });
 
-        if (res.ok) {
-          document.querySelectorAll(".use-btn").forEach(b => {
-            b.textContent = "Pakai";
-            b.disabled = false;
-          });
-          btn.textContent = "Dipakai";
-          btn.disabled = true;
-          alert("Background berhasil disimpan.");
-        } else {
-          alert("Gagal menyimpan background.");
-          btn.textContent = "Pakai";
-        }
-      } catch (err) {
-        alert("Terjadi kesalahan jaringan.");
-        console.error(err);
-      }
+    function tambahBackground() {
+      const link = document.getElementById("bg-url").value;
+      if (!link) return alert("Masukkan link gambar!");
+      tambahDataBackground({ background: link });
     }
   </script>
-
 </body>
 </html>
