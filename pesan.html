@@ -11,22 +11,45 @@
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
-      min-height: 100vh;
       padding: 20px;
     }
 
-    .header {
+    h2 {
       text-align: center;
-      margin-bottom: 20px;
+      color: cyan;
+      margin-bottom: 16px;
     }
 
-    .header h2 {
-      margin-bottom: 10px;
-      font-size: 22px;
-      color: cyan;
+    .pesan-container {
+      max-width: 700px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pesan-card {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 6px 20px rgba(0,255,255,0.1);
+    }
+
+    .pesan-card h4 {
+      margin: 0 0 6px;
+      color: #00eaff;
+      font-size: 15px;
+    }
+
+    .pesan-card p {
+      margin: 0;
+      font-size: 14px;
+      color: #eee;
     }
 
     .logout-btn {
+      display: block;
+      margin: 24px auto 0;
       padding: 8px 16px;
       background: crimson;
       color: white;
@@ -34,51 +57,18 @@
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 4px 0 darkred;
     }
 
     .logout-btn:active {
-      transform: scale(0.96);
-      box-shadow: none;
-    }
-
-    .pesan-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .pesan-card {
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 4px 12px rgba(0,255,255,0.3);
-    }
-
-    .pesan-card h3 {
-      margin: 0;
-      font-size: 16px;
-      color: #00ffff;
-    }
-
-    .pesan-card p {
-      margin: 6px 0 0;
-      font-size: 14px;
-      color: #ddd;
-      line-height: 1.5;
+      transform: scale(0.95);
     }
   </style>
 </head>
-<body onload="cekLogin(); getPesan()">
+<body onload="cekLogin(); tampilkanPesan()">
+  <h2>TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN</h2>
+  <div class="pesan-container" id="pesanContainer"></div>
 
-  <div class="header">
-    <h2>TUAN KU BERIKUT INI ADALAH PESAN/SARAN DARI PELANGGAN</h2>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
-
-  <div class="pesan-container" id="pesan-list">
-    <p>Memuat pesan...</p>
-  </div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
 
   <script>
     function cekLogin() {
@@ -92,34 +82,23 @@
       window.location.href = "index.html";
     }
 
-    async function getPesan() {
-      const container = document.getElementById("pesan-list");
-      container.innerHTML = '';
+    async function tampilkanPesan() {
+      const res = await fetch("https://sheetdb.io/api/v1/hkydnwssgudey");
+      const data = await res.json();
+      const container = document.getElementById("pesanContainer");
 
-      try {
-        const res = await fetch("https://sheetdb.io/api/v1/hkydnwssgudey");
-        const data = await res.json();
-
-        if (data.length === 0) {
-          container.innerHTML = "<p>Belum ada pesan.</p>";
-          return;
-        }
-
-        data.forEach((pesan, i) => {
-          const card = document.createElement("div");
-          card.className = "pesan-card";
-          card.innerHTML = `
-            <h3>${i + 1}. ${pesan.nama}</h3>
-            <p>${pesan.pesan}</p>
-          `;
-          container.appendChild(card);
-        });
-
-      } catch (e) {
-        container.innerHTML = "<p>Gagal memuat pesan.</p>";
+      if (data.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>Belum ada pesan</p>";
+        return;
       }
+
+      container.innerHTML = data.map(pesan => `
+        <div class="pesan-card">
+          <h4>🧑 ${pesan.nama}</h4>
+          <p>${pesan.pesan}</p>
+        </div>
+      `).join('');
     }
   </script>
-
 </body>
 </html>
