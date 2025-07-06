@@ -1,78 +1,62 @@
 body {
-  font-family: 'Poppins', sans-serif;
   margin: 0;
-  padding: 20px;
-  background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
-  color: #fff;
-  min-height: 100vh;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.admin-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.admin-header h1 {
-  font-size: 26px;
-  margin-bottom: 10px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-
-.admin-header p {
-  font-size: 14px;
-  color: #ccc;
-}
-
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  max-width: 600px;
-  margin: 0 auto 40px;
-}
-
-.menu-grid a {
-  background: #00bcd4;
-  padding: 14px;
+.login-box {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 255, 255, 0.2);
+  max-width: 320px;
+  width: 90%;
   text-align: center;
   color: white;
-  font-weight: 600;
-  border-radius: 10px;
-  text-decoration: none;
-  box-shadow: 0 4px 0 #007aa1, 0 0 8px rgba(0, 188, 212, 0.4);
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(145deg, #00bcd4, #008c9e);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 0 #007d8a;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.menu-grid a:hover {
-  transform: scale(1.05);
-  background: #00acc1;
-  box-shadow: 0 6px 14px rgba(0, 255, 255, 0.6);
+.login-box button:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 0 #005e66;
 }
 
-.logout-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
-.logout-btn {
-  background-color: crimson;
-  color: white;
-  font-weight: bold;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #a30000;
-  transition: all 0.15s ease;
-}
-
-.logout-btn:hover {
-  transform: scale(1.03);
-  background-color: #d60000;
-}
-
-.logout-btn:active {
-  transform: scale(0.95);
-  box-shadow: 0 2px 0 #a30000;
+.error {
+  color: #ff4d4d;
+  margin-top: 10px;
+  font-size: 14px;
 }
