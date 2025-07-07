@@ -2,133 +2,121 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Produk</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Produk - Admin Villain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
+      font-family: 'Poppins', sans-serif;
       color: white;
+      text-align: center;
       padding: 20px;
     }
 
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 24px;
-      border-radius: 14px;
-      box-shadow: 0 8px 24px rgba(0,255,255,0.2);
-    }
-
-    h2 {
-      text-align: center;
-      color: cyan;
-      margin-bottom: 20px;
-    }
-
-    input, textarea {
-      width: 100%;
+    select, input, button, textarea {
+      width: 90%;
+      max-width: 400px;
       padding: 10px;
-      margin-bottom: 14px;
-      border-radius: 8px;
+      margin: 10px auto;
+      display: block;
+      border-radius: 10px;
       border: none;
       font-size: 14px;
-      outline: none;
     }
 
     button {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(145deg, #00c2ff, #007bff);
+      background: linear-gradient(135deg, #00b4db, #0083b0);
       color: white;
-      border: none;
-      border-radius: 8px;
       font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #0066cc;
-      transition: all 0.2s ease;
+      box-shadow: 0 4px 0 #00688B;
+      transition: 0.2s;
     }
 
     button:active {
       transform: scale(0.97);
-      box-shadow: 0 2px 0 #004e99;
+      box-shadow: 0 2px 0 #00475b;
     }
 
-    .logout-btn {
-      display: block;
-      margin: 16px auto 0;
-      padding: 8px 16px;
-      background: crimson;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .logout-btn:active {
-      transform: scale(0.95);
+    h2 {
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 4px #000;
     }
   </style>
 </head>
-<body onload="cekLogin()">
-  <div class="container">
-    <h2>Edit Produk</h2>
-    <input type="text" id="id" placeholder="ID Produk (misalnya: 1)" required>
-    <input type="text" id="foto" placeholder="URL Foto Produk">
-    <input type="text" id="nama" placeholder="Nama Produk">
-    <input type="text" id="harga" placeholder="Harga">
-    <input type="text" id="diskon" placeholder="Diskon (opsional)">
-    <input type="number" id="stok" placeholder="Stok">
-    <textarea id="deskripsi" placeholder="Deskripsi Produk" rows="3"></textarea>
-    <button onclick="editProduk()">Simpan Perubahan</button>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
+<body>
+
+  <h2>Edit Produk</h2>
+
+  <select id="product-select" onchange="fillForm(this.value)">
+    <option value="">-- Pilih Produk --</option>
+  </select>
+
+  <form id="edit-form" onsubmit="submitEdit(event)">
+    <input type="text" id="nama" placeholder="Nama Produk" required>
+    <input type="text" id="stok" placeholder="Stok" required>
+    <input type="text" id="harga" placeholder="Harga" required>
+    <input type="text" id="diskon" placeholder="Diskon (%)">
+    <input type="text" id="deskripsi" placeholder="Deskripsi Produk">
+    <input type="text" id="foto" placeholder="Link Foto Produk">
+    <button type="submit">Simpan Perubahan</button>
+  </form>
 
   <script>
-    function cekLogin() {
-      if (!localStorage.getItem("loggedIn")) {
-        window.location.href = "index.html";
-      }
-    }
+    const API_PRODUK = "https://sheetdb.io/api/v1/vmf2cfpzd8dpr";
 
-    function logout() {
-      localStorage.removeItem("loggedIn");
-      window.location.href = "index.html";
-    }
-
-    function editProduk() {
-      const id = document.getElementById("id").value;
-      const foto = document.getElementById("foto").value;
-      const nama = document.getElementById("nama").value;
-      const harga = document.getElementById("harga").value;
-      const diskon = document.getElementById("diskon").value;
-      const stok = document.getElementById("stok").value;
-      const deskripsi = document.getElementById("deskripsi").value;
-
-      const data = {
-        foto, nama, harga, diskon, stok, deskripsi
-      };
-
-      fetch(`https://sheetdb.io/api/v1/vmf2cfpzd8dpr/id/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ data })
-      })
+    // Isi Dropdown
+    fetch(API_PRODUK)
       .then(res => res.json())
-      .then(() => {
-        alert("Produk berhasil diperbarui!");
-        window.location.reload();
-      })
-      .catch(() => {
-        alert("Gagal memperbarui produk.");
+      .then(data => {
+        const select = document.getElementById("product-select");
+        data.forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.textContent = `#${p.id} - ${p.nama}`;
+          select.appendChild(opt);
+        });
       });
+
+    // Isi Form
+    function fillForm(id) {
+      fetch(`${API_PRODUK}/search?id=${id}`)
+        .then(res => res.json())
+        .then(([p]) => {
+          document.getElementById("nama").value = p.nama;
+          document.getElementById("stok").value = p.stok;
+          document.getElementById("harga").value = p.harga;
+          document.getElementById("diskon").value = p.diskon;
+          document.getElementById("deskripsi").value = p.deskripsi;
+          document.getElementById("foto").value = p.foto;
+        });
+    }
+
+    // Kirim Form Edit
+    function submitEdit(e) {
+      e.preventDefault();
+      const id = document.getElementById("product-select").value;
+      const data = {
+        nama: document.getElementById("nama").value,
+        stok: document.getElementById("stok").value,
+        harga: document.getElementById("harga").value,
+        diskon: document.getElementById("diskon").value,
+        deskripsi: document.getElementById("deskripsi").value,
+        foto: document.getElementById("foto").value,
+      };
+      fetch(`${API_PRODUK}/id/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+        .then(() => {
+          alert("✅ Produk berhasil diperbarui!");
+          location.reload();
+        });
     }
   </script>
+
 </body>
 </html>
+
