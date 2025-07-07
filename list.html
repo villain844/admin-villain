@@ -1,121 +1,131 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Edit Produk - Admin Villain</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>List Produk | Villain Admin</title>
   <style>
     body {
+      font-family: 'Poppins', sans-serif;
       background: url('https://files.catbox.moe/28c7fi.jpg') no-repeat center center fixed;
       background-size: cover;
-      font-family: 'Poppins', sans-serif;
-      color: white;
-      text-align: center;
-      padding: 20px;
+      color: #fff;
+      margin: 0;
+      padding: 0;
     }
 
-    select, input, button, textarea {
+    h1 {
+      text-align: center;
+      margin: 20px;
+      font-weight: bold;
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 40px;
+    }
+
+    .produk {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 12px;
+      padding: 16px;
       width: 90%;
-      max-width: 400px;
-      padding: 10px;
-      margin: 10px auto;
-      display: block;
+      max-width: 600px;
+      margin: 10px 0;
+      box-shadow: 0 4px 10px rgba(0, 255, 255, 0.4);
+      color: #fff;
+    }
+
+    .produk h3 {
+      margin: 0;
+      color: #00ffff;
+      font-size: 18px;
+    }
+
+    .produk img {
+      max-width: 100px;
+      height: 100px;
+      object-fit: cover;
       border-radius: 10px;
-      border: none;
+      box-shadow: 0 0 8px #00ffff;
+      margin: 10px 0;
+    }
+
+    .produk p {
+      margin: 6px 0;
       font-size: 14px;
     }
 
-    button {
-      background: linear-gradient(135deg, #00b4db, #0083b0);
+    .back-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      padding: 8px 16px;
+      background: #00bcd4;
+      border: none;
+      border-radius: 8px;
       color: white;
       font-weight: bold;
-      box-shadow: 0 4px 0 #00688B;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
       transition: 0.2s;
     }
 
-    button:active {
-      transform: scale(0.97);
-      box-shadow: 0 2px 0 #00475b;
+    .back-btn:hover {
+      background: #0097a7;
     }
 
-    h2 {
-      margin-bottom: 20px;
-      text-shadow: 1px 1px 4px #000;
+    .no-data {
+      color: #ccc;
+      font-style: italic;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-
-  <h2>Edit Produk</h2>
-
-  <select id="product-select" onchange="fillForm(this.value)">
-    <option value="">-- Pilih Produk --</option>
-  </select>
-
-  <form id="edit-form" onsubmit="submitEdit(event)">
-    <input type="text" id="nama" placeholder="Nama Produk" required>
-    <input type="text" id="stok" placeholder="Stok" required>
-    <input type="text" id="harga" placeholder="Harga" required>
-    <input type="text" id="diskon" placeholder="Diskon (%)">
-    <input type="text" id="deskripsi" placeholder="Deskripsi Produk">
-    <input type="text" id="foto" placeholder="Link Foto Produk">
-    <button type="submit">Simpan Perubahan</button>
-  </form>
+  <button class="back-btn" onclick="window.location.href='halaman.html'">← Kembali</button>
+  <h1>Daftar Produk</h1>
+  <div class="container" id="produk-list">
+    <p class="no-data">Memuat data produk...</p>
+  </div>
 
   <script>
-    const API_PRODUK = "https://sheetdb.io/api/v1/vmf2cfpzd8dpr";
+    const produkList = document.getElementById("produk-list");
 
-    // Isi Dropdown
-    fetch(API_PRODUK)
+    fetch("https://sheetdb.io/api/v1/vmf2cfpzd8dpr")
       .then(res => res.json())
       .then(data => {
-        const select = document.getElementById("product-select");
-        data.forEach(p => {
-          const opt = document.createElement("option");
-          opt.value = p.id;
-          opt.textContent = `#${p.id} - ${p.nama}`;
-          select.appendChild(opt);
-        });
-      });
+        produkList.innerHTML = "";
 
-    // Isi Form
-    function fillForm(id) {
-      fetch(`${API_PRODUK}/search?id=${id}`)
-        .then(res => res.json())
-        .then(([p]) => {
-          document.getElementById("nama").value = p.nama;
-          document.getElementById("stok").value = p.stok;
-          document.getElementById("harga").value = p.harga;
-          document.getElementById("diskon").value = p.diskon;
-          document.getElementById("deskripsi").value = p.deskripsi;
-          document.getElementById("foto").value = p.foto;
-        });
-    }
+        if (data.length === 0) {
+          produkList.innerHTML = "<p class='no-data'>Tidak ada produk tersedia.</p>";
+        } else {
+          data.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "produk";
 
-    // Kirim Form Edit
-    function submitEdit(e) {
-      e.preventDefault();
-      const id = document.getElementById("product-select").value;
-      const data = {
-        nama: document.getElementById("nama").value,
-        stok: document.getElementById("stok").value,
-        harga: document.getElementById("harga").value,
-        diskon: document.getElementById("diskon").value,
-        deskripsi: document.getElementById("deskripsi").value,
-        foto: document.getElementById("foto").value,
-      };
-      fetch(`${API_PRODUK}/id/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+            card.innerHTML = `
+              <h3>${item.nama || "Tanpa Nama"}</h3>
+              <img src="${item.foto || "#"}" alt="${item.nama}">
+              <p><strong>Harga:</strong> ${item.harga || "-"}</p>
+              <p><strong>Stok:</strong> ${item.stok || "0"}</p>
+              <p><strong>Deskripsi:</strong> ${item.deskripsi || "-"}</p>
+              <p><strong>Order Link:</strong> <a href="${item.order}" target="_blank" style="color: #00ffff;">${item.order}</a></p>
+            `;
+
+            produkList.appendChild(card);
+          });
+        }
       })
-        .then(res => res.json())
-        .then(() => {
-          alert("✅ Produk berhasil diperbarui!");
-          location.reload();
-        });
-    }
+      .catch(err => {
+        produkList.innerHTML = "<p class='no-data'>Gagal mengambil data produk.</p>";
+        console.error(err);
+      });
   </script>
-
 </body>
 </html>
